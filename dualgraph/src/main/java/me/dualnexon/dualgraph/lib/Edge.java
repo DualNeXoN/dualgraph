@@ -8,27 +8,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import me.dualnexon.dualgraph.app.GraphStage;
 
-public class Edge extends BaseNode implements INode {
+public class Edge extends BaseEdge {
 	
-	private Vertex[] vertices = new Vertex[2];
 	private Line line;
-	private Namespace namespace;
-	private int value;
 	
 	public Edge(Vertex v1, Vertex v2) {
 		this(v1, v2, 1);
 	}
 	
-	public Edge(Vertex v1, Vertex v2, int value) {
-		
-		vertices[0] = v1;
-		vertices[1] = v2;
-		this.value = value;
+	public Edge(Vertex v1, Vertex v2, int edgeValue) {
+		super(v1, v2, edgeValue);
 		
 		line = new Line(vertices[0].getRealX(), vertices[0].getRealY(), vertices[1].getRealX(), vertices[1].getRealY());
 		GraphStage.get().addNode(line);
 		
-		namespace = new Namespace(Integer.toString(this.value), getCenterX(), getCenterY());
+		namespace = new Namespace(Integer.toString(this.edgeValue), getCenterX(), getCenterY());
 		
 		events();
 	}
@@ -56,18 +50,6 @@ public class Edge extends BaseNode implements INode {
 			}
 		});
 		
-	}
-	
-	public Vertex getFirstVertex() {
-		return vertices[0];
-	}
-	
-	public Vertex getSecondVertex() {
-		return vertices[1];
-	}
-	
-	public Vertex getVertexByIndex(int index) {
-		return index == 0 ? getFirstVertex() : getSecondVertex();
 	}
 	
 	public void render() {
@@ -102,15 +84,6 @@ public class Edge extends BaseNode implements INode {
 	
 	public boolean hasVertex(Vertex v) {
 		return (vertices[0].equals(v)) || (vertices[1].equals(v));
-	}
-	
-	public int getValue() {
-		return value;
-	}
-	
-	public void setValue(int value) {
-		this.value = value;
-		namespace.setText(Integer.toString(value));
 	}
 
 	@Override

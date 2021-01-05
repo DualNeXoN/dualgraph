@@ -4,7 +4,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import me.dualnexon.dualgraph.app.GraphStage;
 
-public class Namespace implements INode {
+public class Namespace extends BaseNode {
 	
 	private Text text;
 	private double x;
@@ -27,6 +27,10 @@ public class Namespace implements INode {
 		
 	}
 	
+	public Namespace(String name) {
+		
+	}
+	
 	private void events() {
 		
 		text.setOnMouseDragged((e) -> {
@@ -40,6 +44,12 @@ public class Namespace implements INode {
 	public void updatePos() {
 		text.setLayoutX(x + offsetX);
 		text.setLayoutY(y + offsetY);
+	}
+	
+	public void setPos(double x, double y) {
+		this.x = x;
+		this.y = y;
+		updatePos();
 	}
 	
 	public void setText(String text) {

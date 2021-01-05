@@ -9,12 +9,10 @@ public abstract class BaseNode {
 		Graph.get().render();
 	}
 	
-	public boolean getSelected() {
-		return selected;
-	}
-	
 	public boolean isSelected() {
 		return selected;
 	}
+	
+	public abstract void destroy();
 	
 }

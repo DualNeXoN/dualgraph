@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import me.dualnexon.dualgraph.AppConfiguration;
 import me.dualnexon.dualgraph.app.GraphStage;
 
-public class Vertex extends BaseVertex implements INode {
+public class Vertex extends BaseVertex {
 	
 	private static char autoName = 'A';
 	
