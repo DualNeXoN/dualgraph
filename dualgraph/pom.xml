@@ -32,7 +32,7 @@
                 <version>0.0.4</version>
                 <configuration>
                     <mainClass>me.dualnexon.dualgraph.App</mainClass>
-                    <executable>C:\Program Files\Java\jdk-15.0.1</executable>
+                    <executable>C:\Program Files\Java\jdk-15.0.1\bin\javaw.exe</executable>
                 </configuration>
             </plugin>
         </plugins>

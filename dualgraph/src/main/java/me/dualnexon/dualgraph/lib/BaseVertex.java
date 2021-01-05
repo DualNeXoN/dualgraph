@@ -1,5 +1,7 @@
 package me.dualnexon.dualgraph.lib;
 
+import me.dualnexon.dualgraph.app.GraphStage;
+
 public abstract class BaseVertex extends BaseNode {
 	
 	protected double x;
@@ -11,6 +13,14 @@ public abstract class BaseVertex extends BaseNode {
 	
 	public final double getY() {
 		return y;
+	}
+	
+	public final double getRealX() {
+		return x - GraphStage.get().getOffsetX();		
+	}
+	
+	public final double getRealY() {
+		return y - GraphStage.get().getOffsetY();
 	}
 	
 }

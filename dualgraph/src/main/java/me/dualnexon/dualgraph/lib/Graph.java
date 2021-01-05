@@ -15,6 +15,24 @@ public class Graph {
 	private LinkedList<Vertex> vertices;
 	private LinkedList<Edge> edges;
 	
+	private Vertex starting, ending;
+	
+	public void setStarting(Vertex starting) {
+		this.starting = starting;
+	}
+	
+	public void setEnding(Vertex ending) {
+		this.ending = ending;
+	}
+	
+	public Vertex getStarting() {
+		return starting;
+	}
+	
+	public Vertex getEnding() {
+		return ending;
+	}
+	
 	public Graph() {
 		
 		if(instance == null) instance = this;

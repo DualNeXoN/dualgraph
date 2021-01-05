@@ -29,7 +29,7 @@ public class Vertex extends BaseVertex implements INode {
 		this.x = x;
 		this.y = y;
 		
-		namespace = new Namespace(name, x, y);
+		namespace = new Namespace(name, getRealX(), getRealY());
 		
 		canvas = new Canvas(SIZE, SIZE);
 		GraphStage.get().addNode(canvas);
@@ -46,8 +46,8 @@ public class Vertex extends BaseVertex implements INode {
 	
 	public void render() {
 		
-		canvas.setLayoutX(x-SIZE/2);
-		canvas.setLayoutY(y-SIZE/2);
+		canvas.setLayoutX(getRealX()-SIZE/2);
+		canvas.setLayoutY(getRealY()-SIZE/2);
 		
 		g2d.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		
@@ -59,8 +59,8 @@ public class Vertex extends BaseVertex implements INode {
 		g2d.setFill(Color.WHITE);
 		g2d.fillOval(3, 3, SIZE-6, SIZE-6);
 		
-		namespace.setX(x - namespace.getWidth()/2);
-		namespace.setY(y - namespace.getHeight());
+		namespace.setX(getRealX() - namespace.getWidth()/2);
+		namespace.setY(getRealY() - namespace.getHeight());
 		namespace.updatePos();
 		
 		canvas.toFront();
@@ -87,15 +87,35 @@ public class Vertex extends BaseVertex implements INode {
 					select(!selected);
 				}
 			});
+			MenuItem item3 = new MenuItem("Starting " + getClass().getSimpleName() + " of edge");
+			item3.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent e) {
+					Graph.get().setStarting(currentInstance);
+					System.out.println("S");
+				}
+			});
+			MenuItem item4 = new MenuItem("Ending " + getClass().getSimpleName() + " of edge");
+			item4.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent e) {
+					Graph.get().setEnding(currentInstance);
+					System.out.println("E");
+					if(Graph.get().getStarting() != null && Graph.get().getEnding() != null) {
+						Graph.get().addEdge(new Edge(Graph.get().getStarting(), Graph.get().getEnding()));
+					}
+				}
+			});
 			contextMenu.getItems().add(item1);
 			contextMenu.getItems().add(item2);
+			contextMenu.getItems().add(item3);
+			contextMenu.getItems().add(item4);
 			contextMenu.show(canvas, e.getScreenX(), e.getScreenY());
 		});
 		
 		canvas.setOnMouseReleased((e) -> {
 			if(e.isShiftDown()) {
-				selected = !selected;
-				Graph.get().render();				
+				select(!selected);
 			}
 		});
 		

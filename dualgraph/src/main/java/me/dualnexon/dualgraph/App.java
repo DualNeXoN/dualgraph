@@ -9,6 +9,6 @@ public class App extends Application {
     @Override
     public void start(Stage stage) { new GraphStage(1280, 720); }
 
-    public static void main(String[] args) { launch(); }
+    public static void main(String[] args) { launch(args); }
 
 }

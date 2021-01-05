@@ -42,6 +42,10 @@ public class Namespace implements INode {
 		text.setLayoutY(y + offsetY);
 	}
 	
+	public void setText(String text) {
+		this.text.setText(text);
+	}
+	
 	public String getName() {
 		return text.getText();
 	}

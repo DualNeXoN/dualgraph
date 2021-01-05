@@ -13,7 +13,27 @@ public class SceneBuilder {
 		new Graph();
 		
 		gs.getScene().setOnMousePressed((e) -> {
-			if(e.isControlDown()) Graph.get().addVertex(new Vertex(e.getX(), e.getY()));
+			if(e.isControlDown()) {
+				Graph.get().addVertex(new Vertex(e.getX(), e.getY()));
+			} else if(e.isMiddleButtonDown()) {
+				GraphStage.get().setStageMove(true);
+				GraphStage.get().setInitialDragX(e.getSceneX());
+				GraphStage.get().setInitialDragY(e.getSceneY());
+			}
+		});
+		
+		gs.getScene().setOnMouseReleased((e) -> {
+			if(GraphStage.get().getStageMove()) {
+				GraphStage.get().setStageMove(false);
+			}
+		});
+		
+		gs.getScene().setOnMouseDragged((e) -> {
+			if(GraphStage.get().getStageMove()) {
+				GraphStage.get().setOffsetX(e.getSceneX());
+				GraphStage.get().setOffsetY(e.getSceneY());
+				Graph.get().render();
+			}
 		});
 		
 		gs.getScene().setOnKeyPressed((e) -> {

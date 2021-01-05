@@ -17,5 +17,4 @@ public abstract class BaseNode {
 		return selected;
 	}
 	
-	
 }

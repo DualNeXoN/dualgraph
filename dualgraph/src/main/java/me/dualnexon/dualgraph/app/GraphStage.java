@@ -18,6 +18,11 @@ public class GraphStage extends Stage {
 	private Scene scene;
 	private Group root;
 	
+	private double offsetX = 0, initialDragX = 0;
+	private double offsetY = 0, initialDragY = 0;
+	
+	private boolean stageMove = false;
+	
 	public GraphStage(int width, int height) {
 		
 		if(instance == null) instance = this;
@@ -49,6 +54,46 @@ public class GraphStage extends Stage {
 	
 	public void removeAllNodes() {
 		root.getChildren().removeAll();
+	}
+	
+	public double getOffsetX() {
+		return offsetX;
+	}
+	
+	public void setOffsetX(double offsetX) {
+		this.offsetX = initialDragX - offsetX;
+	}
+		
+	public double getOffsetY() {
+		return offsetY;
+	}
+	
+	public void setOffsetY(double offsetY) {
+		this.offsetY = initialDragY - offsetY;
+	}
+	
+	public double getInitialDragX() {
+		return initialDragX;
+	}
+	
+	public void setInitialDragX(double initialDragX) {
+		this.initialDragX = initialDragX;
+	}
+	
+	public double getInitialDragY() {
+		return initialDragY;
+	}
+	
+	public void setInitialDragY(double initialDragY) {
+		this.initialDragY = initialDragY;
+	}
+	
+	public boolean getStageMove() {
+		return stageMove;
+	}
+	
+	public void setStageMove(boolean stageMove) {
+		this.stageMove = stageMove;
 	}
 	
 }
