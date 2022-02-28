@@ -28,6 +28,8 @@ public class Workspace implements Updatable {
 	private Grid grid;
 	private DebugMonitor debugMonitor;
 	
+	private SelectionRectangle selectionRectangle;
+	
 	private double offsetX = 0, initialDragX = 0, lastOffsetX = offsetX;
 	private double offsetY = 0, initialDragY = 0, lastOffsetY = offsetY;
 	private boolean stageMove = false;
@@ -56,6 +58,8 @@ public class Workspace implements Updatable {
 				setInitialDragX(e.getSceneX());
 				setInitialDragY(e.getSceneY());
 				update();
+			} else if(e.isPrimaryButtonDown() && e.isShiftDown()) {
+				selectionRectangle = new SelectionRectangle(this, e.getSceneX(), e.getSceneY());
 			}
 		});
 		
@@ -64,12 +68,21 @@ public class Workspace implements Updatable {
 				setOffsetX(e.getSceneX());
 				setOffsetY(e.getSceneY());
 				update();
+			} else if(selectionRectangle != null && e.isShiftDown()) {
+				selectionRectangle.setEndPositionX(e.getSceneX());
+				selectionRectangle.setEndPositionY(e.getSceneY());
+				selectionRectangle.update();
 			}
 		});
 		
 		scene.setOnMouseReleased(e -> {
 			if(getStageMove()) {
 				setStageMove(false);
+			}
+			
+			if(selectionRectangle != null) {
+				selectionRectangle.destroy();
+				selectionRectangle = null;
 			}
 		});
 		

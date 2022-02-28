@@ -18,6 +18,7 @@ public class Vertex implements Updatable {
 	private double positionX, positionY;
 	private double size;
 	private Circle node;
+	private boolean selected = false;
 	
 	public Vertex(Graph graph, double positionX, double positionY, double size) {
 		this.graph = graph;
@@ -47,13 +48,13 @@ public class Vertex implements Updatable {
 					destroy();
 				}
 			});
-			/*MenuItem item2 = new MenuItem((selected ? "Unselect " : "Select ") + getClass().getSimpleName());
+			MenuItem item2 = new MenuItem((selected ? "Unselect " : "Select ") + getClass().getSimpleName());
 			item2.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent e) {
-					select(!selected);
+					toggleSelected();
 				}
-			});*/
+			});
 			MenuItem item3 = new MenuItem("Starting " + getClass().getSimpleName() + " of edge");
 			item3.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
@@ -79,18 +80,14 @@ public class Vertex implements Updatable {
 				}
 			});*/
 			
-			contextMenu.getItems().add(item1);
-			//contextMenu.getItems().add(item2);
-			contextMenu.getItems().add(item3);
-			contextMenu.getItems().add(item4);
-			//contextMenu.getItems().add(item5);
+			contextMenu.getItems().addAll(item2, item3, item4, item1);
 			contextMenu.show(node, e.getScreenX(), e.getScreenY());
 		});
 		
 		node.setOnMouseReleased((e) -> {
-			/*if(e.isShiftDown()) {
-				select(!selected);
-			}*/
+			if(e.isShiftDown()) {
+				toggleSelected();
+			}
 			node.setCursor(Cursor.HAND);
 		});
 		
@@ -152,6 +149,20 @@ public class Vertex implements Updatable {
 		return node;
 	}
 	
+	public boolean isSelected() {
+		return selected;
+	}
+	
+	public void select() {
+		selected = true;
+		graph.update();
+	}
+	
+	public void toggleSelected() {
+		this.selected = !this.selected;
+		graph.update();
+	}
+	
 	@Override
 	public void destroy() {
 		graph.getWorkspace().removeNode(node);
@@ -164,7 +175,7 @@ public class Vertex implements Updatable {
 		node.setCenterY(getRealPositionY());
 		node.setRadius(size);
 		node.setFill(Color.WHITE);
-		node.setStroke(Color.BLACK);
+		node.setStroke((isSelected() ? Color.RED : Color.BLACK));
 		node.setStrokeWidth(2);
 		node.toFront();
 	}

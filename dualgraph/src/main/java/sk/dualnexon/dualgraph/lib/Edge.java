@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import sk.dualnexon.dualgraph.ui.Updatable;
 
@@ -15,6 +16,7 @@ public class Edge implements Updatable {
 	private Line node;
 	private Vertex firstVertex, secondVertex;
 	private double value;
+	private boolean selected = false;
 	
 	public Edge(Graph graph, Vertex vertex1, Vertex vertex2, double value) {
 		this.graph = graph;
@@ -34,25 +36,31 @@ public class Edge implements Updatable {
 					destroy();
 				}
 			});
-			/*MenuItem item2 = new MenuItem("Reset namespace offset");
+			MenuItem item2 = new MenuItem((selected ? "Unselect " : "Select ") + getClass().getSimpleName());
+			item2.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent e) {
+					toggleSelected();
+				}
+			});
+			/*MenuItem item3 = new MenuItem("Reset namespace offset");
 			item2.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent e) {
 					namespace.resetOffset();
 				}
 			});*/
-			contextMenu.getItems().add(item1);
-			//contextMenu.getItems().add(item2);
+			contextMenu.getItems().addAll(item2, item1);
+			//contextMenu.getItems().add(item3);
 			contextMenu.show(node, e.getScreenX(), e.getScreenY());
 		});
 		
-		/*
-		line.setOnMouseReleased((e) -> {
+		node.setOnMouseReleased((e) -> {
 			if(e.isShiftDown()) {
-				selected = !selected;
-				Graph.get().render();
+				toggleSelected();
+				graph.update();
 			}
-		});*/
+		});
 		
 		update();
 	}
@@ -81,6 +89,20 @@ public class Edge implements Updatable {
 		return node;
 	}
 	
+	public boolean isSelected() {
+		return selected;
+	}
+	
+	public void select() {
+		selected = true;
+		graph.update();
+	}
+	
+	public void toggleSelected() {
+		this.selected = !this.selected;
+		graph.update();
+	}
+	
 	@Override
 	public void destroy() {
 		graph.getWorkspace().removeNode(node);
@@ -99,7 +121,8 @@ public class Edge implements Updatable {
 		node.setEndX(v2X + -graph.getWorkspace().getOffsetX());
 		node.setEndY(v2Y + -graph.getWorkspace().getOffsetY());
 		
-		node.setStrokeWidth(3);
+		node.setStroke((isSelected() ? Color.RED : Color.BLACK));
+		node.setStrokeWidth(5);
 		
 		node.toFront();
 	}
