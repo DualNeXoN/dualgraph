@@ -4,9 +4,12 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Window extends Stage {
+	
+	private static final double DEFAULT_SCALE_DIVIDE_WIDTH = 1.5;
+	private static final double DEFAULT_SCALE_DIVIDE_HEIGHT = 1.5;
 
 	public Window() {
-		this(Screen.getPrimary().getBounds().getWidth() / 1.5, Screen.getPrimary().getBounds().getHeight() / 1.5);
+		this(Screen.getPrimary().getBounds().getWidth() / DEFAULT_SCALE_DIVIDE_WIDTH, Screen.getPrimary().getBounds().getHeight() / DEFAULT_SCALE_DIVIDE_HEIGHT);
 	}
 	
 	public Window(double width, double height) {
@@ -16,6 +19,10 @@ public class Window extends Stage {
 		
 		show();
 		
+	}
+	
+	public void toggleFullscreen() {
+		setFullScreen(!isFullScreen());
 	}
 	
 }
