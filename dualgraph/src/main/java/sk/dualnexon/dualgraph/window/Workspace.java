@@ -26,6 +26,7 @@ public class Workspace implements Updatable {
 	private Scene scene;
 	private Graph graph;
 	private Grid grid;
+	private DebugMonitor debugMonitor;
 	
 	private double offsetX = 0, initialDragX = 0, lastOffsetX = offsetX;
 	private double offsetY = 0, initialDragY = 0, lastOffsetY = offsetY;
@@ -39,6 +40,7 @@ public class Workspace implements Updatable {
 		scene = new Scene(root);
 		graph = new Graph(this);
 		grid = new Grid(this);
+		debugMonitor = new DebugMonitor(this);
 		
 		scene.setOnMouseClicked(e -> {
 			if(e.isControlDown()) {
@@ -96,6 +98,16 @@ public class Workspace implements Updatable {
 	        	}));
 	        	delayer.play();
 	        }
+	    });
+	    
+	    scene.setOnKeyPressed(e -> {
+	    	switch(e.getCode()) {
+	    	case F3:
+	    		debugMonitor.toggleVisibility();
+	    		break;
+	    	default:
+	    		break;
+	    	}
 	    });
 		
 	}
@@ -192,6 +204,7 @@ public class Workspace implements Updatable {
 	public void destroy() {
 		grid.destroy();
 		graph.destroy();
+		debugMonitor.destroy();
 	}
 
 	@Override

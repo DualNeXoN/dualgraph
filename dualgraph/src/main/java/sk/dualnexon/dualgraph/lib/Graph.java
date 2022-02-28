@@ -28,6 +28,8 @@ public class Graph implements Updatable {
 	}
 	
 	public void removeVertex(Vertex vertex) {
+		if(startingVertex != null && startingVertex.equals(vertex)) startingVertex = null;
+		else if(endingVertex != null && endingVertex.equals(vertex)) endingVertex = null;
 		verticies.remove(vertex);
 		for(int index = edges.size()-1; index >= 0; index--) {
 			Edge edge = edges.get(index);

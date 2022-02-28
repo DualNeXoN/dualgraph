@@ -1,5 +1,9 @@
 package sk.dualnexon.dualgraph.lib;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.shape.Line;
 import sk.dualnexon.dualgraph.ui.Updatable;
 
@@ -20,6 +24,35 @@ public class Edge implements Updatable {
 		
 		node = new Line();
 		graph.getWorkspace().addNode(node);
+		
+		node.setOnContextMenuRequested((e) -> {
+			ContextMenu contextMenu = new ContextMenu();
+			MenuItem item1 = new MenuItem("Delete " + getClass().getSimpleName());
+			item1.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent e) {
+					destroy();
+				}
+			});
+			/*MenuItem item2 = new MenuItem("Reset namespace offset");
+			item2.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent e) {
+					namespace.resetOffset();
+				}
+			});*/
+			contextMenu.getItems().add(item1);
+			//contextMenu.getItems().add(item2);
+			contextMenu.show(node, e.getScreenX(), e.getScreenY());
+		});
+		
+		/*
+		line.setOnMouseReleased((e) -> {
+			if(e.isShiftDown()) {
+				selected = !selected;
+				Graph.get().render();
+			}
+		});*/
 		
 		update();
 	}
@@ -51,6 +84,7 @@ public class Edge implements Updatable {
 	@Override
 	public void destroy() {
 		graph.getWorkspace().removeNode(node);
+		graph.removeEdge(this);
 	}
 
 	@Override
