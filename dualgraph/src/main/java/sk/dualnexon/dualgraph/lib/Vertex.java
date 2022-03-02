@@ -22,6 +22,8 @@ public class Vertex extends BaseGraphNode {
 	private Namespace namespace;
 	private double namespaceDefaultOffsetX, namespaceDefaultOffsetY;
 	
+	private ContextMenu contextMenu;
+	
 	public Vertex(Graph graph, double positionX, double positionY, double size) {
 		this.graph = graph;
 		
@@ -38,6 +40,7 @@ public class Vertex extends BaseGraphNode {
 		
 		graph.update();
 		
+		contextMenuCreation();
 		events();
 	}
 	
@@ -45,51 +48,57 @@ public class Vertex extends BaseGraphNode {
 		this(graph, positionX, positionY, DEFAULT_SIZE);
 	}
 	
+	private void contextMenuCreation() {
+		
+		Vertex thisObjHelper = this;
+		
+		contextMenu = new ContextMenu();
+		MenuItem item1 = new MenuItem("Delete " + getClass().getSimpleName());
+		item1.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				destroy();
+			}
+		});
+		MenuItem item2 = new MenuItem((selected ? "Unselect " : "Select ") + getClass().getSimpleName());
+		item2.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				toggleSelected();
+			}
+		});
+		MenuItem item3 = new MenuItem("Starting " + getClass().getSimpleName() + " of edge");
+		item3.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				graph.setStartingVertex(thisObjHelper);
+			}
+		});
+		MenuItem item4 = new MenuItem("Ending " + getClass().getSimpleName() + " of edge");
+		item4.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				graph.setEndingVertex(thisObjHelper);
+				if(graph.getStartingVertex() != null && graph.getEndingVertex() != null) {
+					graph.addEdge(new Edge(graph, graph.getStartingVertex(), graph.getEndingVertex()));
+				}
+			}
+		});
+		MenuItem item5 = new MenuItem("Reset namespace offset");
+		item5.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				namespace.resetOffset(namespaceDefaultOffsetX, namespaceDefaultOffsetY);
+			}
+		});
+		
+		contextMenu.getItems().addAll(item2, item3, item4, item5, item1);
+		
+	}
+	
 	private void events() {
 		
 		node.setOnContextMenuRequested((e) -> {
-			Vertex currentInstance = this;
-			ContextMenu contextMenu = new ContextMenu();
-			MenuItem item1 = new MenuItem("Delete " + getClass().getSimpleName());
-			item1.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent e) {
-					destroy();
-				}
-			});
-			MenuItem item2 = new MenuItem((selected ? "Unselect " : "Select ") + getClass().getSimpleName());
-			item2.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent e) {
-					toggleSelected();
-				}
-			});
-			MenuItem item3 = new MenuItem("Starting " + getClass().getSimpleName() + " of edge");
-			item3.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent e) {
-					graph.setStartingVertex(currentInstance);
-				}
-			});
-			MenuItem item4 = new MenuItem("Ending " + getClass().getSimpleName() + " of edge");
-			item4.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent e) {
-					graph.setEndingVertex(currentInstance);
-					if(graph.getStartingVertex() != null && graph.getEndingVertex() != null) {
-						graph.addEdge(new Edge(graph, graph.getStartingVertex(), graph.getEndingVertex()));
-					}
-				}
-			});
-			MenuItem item5 = new MenuItem("Reset namespace offset");
-			item5.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent e) {
-					namespace.resetOffset(namespaceDefaultOffsetX, namespaceDefaultOffsetY);
-				}
-			});
-			
-			contextMenu.getItems().addAll(item2, item3, item4, item5, item1);
 			contextMenu.show(node, e.getScreenX(), e.getScreenY());
 		});
 		

@@ -20,6 +20,8 @@ public class Edge extends BaseGraphNode {
 	
 	private Namespace namespace;
 	
+	private ContextMenu contextMenu;
+	
 	public Edge(Graph graph, Vertex vertex1, Vertex vertex2, double value) {
 		this.graph = graph;
 		this.firstVertex = vertex1;
@@ -34,6 +36,7 @@ public class Edge extends BaseGraphNode {
 		
 		update();
 		
+		contextMenuCreation();
 		events();
 	}
 	
@@ -41,32 +44,37 @@ public class Edge extends BaseGraphNode {
 		this(graph, vertex1, vertex2, DEFAULT_VALUE);
 	}
 	
+	private void contextMenuCreation() {
+		
+		contextMenu = new ContextMenu();
+		MenuItem item1 = new MenuItem("Delete " + getClass().getSimpleName());
+		item1.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				destroy();
+			}
+		});
+		MenuItem item2 = new MenuItem((selected ? "Unselect " : "Select ") + getClass().getSimpleName());
+		item2.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				toggleSelected();
+			}
+		});
+		MenuItem item3 = new MenuItem("Reset namespace offset");
+		item3.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				namespace.resetOffset();
+			}
+		});
+		contextMenu.getItems().addAll(item2, item3, item1);
+		
+	}
+	
 	private void events() {
 		
 		node.setOnContextMenuRequested((e) -> {
-			ContextMenu contextMenu = new ContextMenu();
-			MenuItem item1 = new MenuItem("Delete " + getClass().getSimpleName());
-			item1.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent e) {
-					destroy();
-				}
-			});
-			MenuItem item2 = new MenuItem((selected ? "Unselect " : "Select ") + getClass().getSimpleName());
-			item2.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent e) {
-					toggleSelected();
-				}
-			});
-			MenuItem item3 = new MenuItem("Reset namespace offset");
-			item3.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent e) {
-					namespace.resetOffset();
-				}
-			});
-			contextMenu.getItems().addAll(item2, item3, item1);
 			contextMenu.show(node, e.getScreenX(), e.getScreenY());
 		});
 		
