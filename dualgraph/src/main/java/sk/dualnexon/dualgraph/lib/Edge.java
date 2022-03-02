@@ -2,21 +2,23 @@ package sk.dualnexon.dualgraph.lib;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import sk.dualnexon.dualgraph.ui.Updatable;
+import sk.dualnexon.dualgraph.ui.Namespace;
 
-public class Edge implements Updatable {
+public class Edge extends BaseGraphNode {
 	
 	private static final double DEFAULT_VALUE = 1;
 	
-	private Graph graph;
 	private Line node;
 	private Vertex firstVertex, secondVertex;
 	private double value;
 	private boolean selected = false;
+	
+	private Namespace namespace;
 	
 	public Edge(Graph graph, Vertex vertex1, Vertex vertex2, double value) {
 		this.graph = graph;
@@ -26,6 +28,20 @@ public class Edge implements Updatable {
 		
 		node = new Line();
 		graph.getWorkspace().addNode(node);
+		
+		namespace = new Namespace(this, Integer.toString((int) value));
+		graph.getWorkspace().addNode(namespace.getNode());
+		
+		update();
+		
+		events();
+	}
+	
+	public Edge(Graph graph, Vertex vertex1, Vertex vertex2) {
+		this(graph, vertex1, vertex2, DEFAULT_VALUE);
+	}
+	
+	private void events() {
 		
 		node.setOnContextMenuRequested((e) -> {
 			ContextMenu contextMenu = new ContextMenu();
@@ -43,15 +59,14 @@ public class Edge implements Updatable {
 					toggleSelected();
 				}
 			});
-			/*MenuItem item3 = new MenuItem("Reset namespace offset");
-			item2.setOnAction(new EventHandler<ActionEvent>() {
+			MenuItem item3 = new MenuItem("Reset namespace offset");
+			item3.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent e) {
 					namespace.resetOffset();
 				}
-			});*/
-			contextMenu.getItems().addAll(item2, item1);
-			//contextMenu.getItems().add(item3);
+			});
+			contextMenu.getItems().addAll(item2, item3, item1);
 			contextMenu.show(node, e.getScreenX(), e.getScreenY());
 		});
 		
@@ -62,11 +77,13 @@ public class Edge implements Updatable {
 			}
 		});
 		
-		update();
-	}
-	
-	public Edge(Graph graph, Vertex vertex1, Vertex vertex2) {
-		this(graph, vertex1, vertex2, DEFAULT_VALUE);
+		node.setOnMouseEntered(e -> {
+			node.setCursor(Cursor.HAND);
+		});
+		
+		node.setOnMouseExited(e -> {
+			node.setCursor(Cursor.DEFAULT);
+		});
 	}
 	
 	public Graph getGraph() {
@@ -103,10 +120,19 @@ public class Edge implements Updatable {
 		graph.update();
 	}
 	
+	public double getRealPositionX() {
+		return (firstVertex.getRealPositionX() + secondVertex.getRealPositionX()) / 2;
+	}
+	
+	public double getRealPositionY() {
+		return (firstVertex.getRealPositionY() + secondVertex.getRealPositionY()) / 2;
+	}
+	
 	@Override
 	public void destroy() {
 		graph.getWorkspace().removeNode(node);
 		graph.removeEdge(this);
+		namespace.destroy();
 	}
 
 	@Override
@@ -125,6 +151,8 @@ public class Edge implements Updatable {
 		node.setStrokeWidth(5);
 		
 		node.toFront();
+		
+		namespace.update();
 	}
 
 }

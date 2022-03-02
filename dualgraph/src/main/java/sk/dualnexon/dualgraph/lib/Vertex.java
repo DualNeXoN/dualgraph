@@ -7,29 +7,38 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import sk.dualnexon.dualgraph.ui.Updatable;
+import sk.dualnexon.dualgraph.ui.Namespace;
 
-public class Vertex implements Updatable {
+public class Vertex extends BaseGraphNode {
 	
 	private static final double DEFAULT_SIZE = 25;
 	private static final double MIN_SIZE = 10;
 	
-	private Graph graph;
 	private double positionX, positionY;
 	private double size;
 	private Circle node;
 	private boolean selected = false;
 	
+	private Namespace namespace;
+	private double namespaceDefaultOffsetX, namespaceDefaultOffsetY;
+	
 	public Vertex(Graph graph, double positionX, double positionY, double size) {
 		this.graph = graph;
+		
 		node = new Circle(positionX, positionY, size);
 		this.size = size;
 		this.positionX = positionX;
 		this.positionY = positionY;
+		
+		this.namespaceDefaultOffsetX = -size / 1.5;
+		this.namespaceDefaultOffsetY = -size * 1.25;
+		
+		namespace = new Namespace(this, this.namespaceDefaultOffsetX, this.namespaceDefaultOffsetY, "Test");
+		graph.getWorkspace().addNode(namespace.getNode());
+		
 		graph.update();
 		
 		events();
-		
 	}
 	
 	public Vertex(Graph graph, double positionX, double positionY) {
@@ -72,15 +81,15 @@ public class Vertex implements Updatable {
 					}
 				}
 			});
-			/*MenuItem item5 = new MenuItem("Reset namespace offset");
+			MenuItem item5 = new MenuItem("Reset namespace offset");
 			item5.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent e) {
-					namespace.resetOffset();
+					namespace.resetOffset(namespaceDefaultOffsetX, namespaceDefaultOffsetY);
 				}
-			});*/
+			});
 			
-			contextMenu.getItems().addAll(item2, item3, item4, item1);
+			contextMenu.getItems().addAll(item2, item3, item4, item5, item1);
 			contextMenu.show(node, e.getScreenX(), e.getScreenY());
 		});
 		
@@ -136,8 +145,7 @@ public class Vertex implements Updatable {
 	}
 	
 	public void setSize(double size) {
-		this.size = size;
-		if(this.size < MIN_SIZE) this.size = MIN_SIZE;
+		this.size = (size < MIN_SIZE ? MIN_SIZE : size);
 		graph.update();
 	}
 	
@@ -167,6 +175,7 @@ public class Vertex implements Updatable {
 	public void destroy() {
 		graph.getWorkspace().removeNode(node);
 		graph.removeVertex(this);
+		namespace.destroy();
 	}
 
 	@Override
@@ -178,6 +187,8 @@ public class Vertex implements Updatable {
 		node.setStroke((isSelected() ? Color.RED : Color.BLACK));
 		node.setStrokeWidth(2);
 		node.toFront();
+		
+		namespace.update();
 	}
 	
 }
