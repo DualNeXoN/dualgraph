@@ -180,6 +180,10 @@ public class Vertex extends BaseGraphNode {
 		graph.update();
 	}
 	
+	public Namespace getNamespace() {
+		return namespace;
+	}
+	
 	@Override
 	public void destroy() {
 		graph.getWorkspace().removeNode(node);

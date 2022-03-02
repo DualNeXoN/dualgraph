@@ -136,6 +136,10 @@ public class Edge extends BaseGraphNode {
 		return (firstVertex.getRealPositionY() + secondVertex.getRealPositionY()) / 2;
 	}
 	
+	public Namespace getNamespace() {
+		return namespace;
+	}
+	
 	@Override
 	public void destroy() {
 		graph.getWorkspace().removeNode(node);
