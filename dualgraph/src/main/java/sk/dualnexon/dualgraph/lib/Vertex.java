@@ -91,8 +91,15 @@ public class Vertex extends BaseGraphNode {
 				namespace.resetOffset(namespaceDefaultOffsetX, namespaceDefaultOffsetY);
 			}
 		});
+		MenuItem item6 = new MenuItem("Rename " + getClass().getSimpleName());
+		item6.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				namespace.requestToChangeValue();
+			}
+		});
 		
-		contextMenu.getItems().addAll(item2, item3, item4, item5, item1);
+		contextMenu.getItems().addAll(item2, item6, item3, item4, item5, item1);
 		
 	}
 	

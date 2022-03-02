@@ -1,10 +1,13 @@
 package sk.dualnexon.dualgraph.lib;
 
+import java.util.Optional;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import sk.dualnexon.dualgraph.ui.Namespace;
@@ -32,6 +35,7 @@ public class Edge extends BaseGraphNode {
 		graph.getWorkspace().addNode(node);
 		
 		namespace = new Namespace(this, Integer.toString((int) value));
+		namespace.setValueLocked(true);
 		graph.getWorkspace().addNode(namespace.getNode());
 		
 		update();
@@ -68,7 +72,28 @@ public class Edge extends BaseGraphNode {
 				namespace.resetOffset();
 			}
 		});
-		contextMenu.getItems().addAll(item2, item3, item1);
+		MenuItem item4 = new MenuItem("Change value");
+		item4.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				TextInputDialog dialog = new TextInputDialog(namespace.getText());
+				dialog.setHeaderText(null);
+				dialog.setGraphic(null);
+				dialog.setTitle("DualGraph action");
+				dialog.setContentText("Enter new value:");
+
+				Optional<String> result = dialog.showAndWait();
+				if(result.isPresent()) {
+					String resultString = result.get();
+					try {
+						setValue(Double.parseDouble(resultString));
+					} catch(NumberFormatException ex) {
+						
+					}
+				}
+			}
+		});
+		contextMenu.getItems().addAll(item2, item4, item3, item1);
 		
 	}
 	
@@ -104,6 +129,15 @@ public class Edge extends BaseGraphNode {
 	
 	public Vertex getSecondVertex() {
 		return secondVertex;
+	}
+	
+	public void setValue(double value) {
+		this.value = value;
+		String newValueString = "";
+		if(value == (long) value) newValueString = String.format("%d",(long) value);
+	    else newValueString = String.format("%s",value);
+		namespace.setText(newValueString);
+		graph.update();
 	}
 	
 	public double getValue() {

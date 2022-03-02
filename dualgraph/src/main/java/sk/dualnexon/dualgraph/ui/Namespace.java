@@ -1,6 +1,9 @@
 package sk.dualnexon.dualgraph.ui;
 
+import java.util.Optional;
+
 import javafx.scene.Cursor;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import sk.dualnexon.dualgraph.App;
@@ -11,6 +14,7 @@ public class Namespace implements Updatable {
 	private BaseGraphNode graphNode;
 	private Text node;
 	private double offsetX = 0, offsetY = 0;
+	private boolean valueLocked = false;
 	
 	public Namespace(BaseGraphNode graphNode, double offsetX, double offsetY, String text) {
 		this.graphNode = graphNode;
@@ -81,12 +85,41 @@ public class Namespace implements Updatable {
 		resetOffset(0, 0);
 	}
 	
+	public void requestToChangeValue() {
+		TextInputDialog dialog = new TextInputDialog(node.getText());
+		dialog.setHeaderText(null);
+		dialog.setGraphic(null);
+		dialog.setTitle("DualGraph action");
+		dialog.setContentText("Enter new value:");
+
+		Optional<String> result = dialog.showAndWait();
+		if(result.isPresent()) {
+		    setText(result.get());
+		}
+	}
+	
 	public void setText(String text) {
 		node.setText(text);
 	}
 	
 	public String getText() {
 		return node.getText();
+	}
+	
+	public void setValueLocked(boolean valueLocked) {
+		this.valueLocked = valueLocked;
+	}
+	
+	public boolean isValueLocked() {
+		return valueLocked;
+	}
+	
+	public void toggleVisible() {
+		node.setVisible(!node.isVisible());
+	}
+	
+	public boolean isVisible() {
+		return node.isVisible();
 	}
 	
 	public Text getNode() {
