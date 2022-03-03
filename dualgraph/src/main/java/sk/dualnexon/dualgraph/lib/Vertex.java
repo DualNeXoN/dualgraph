@@ -8,7 +8,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import sk.dualnexon.dualgraph.ui.Namespace;
-import sk.dualnexon.dualgraph.util.VertexNameConvention;
 
 public class Vertex extends BaseGraphNode {
 	
@@ -36,7 +35,7 @@ public class Vertex extends BaseGraphNode {
 		this.namespaceDefaultOffsetX = -size / 1.5;
 		this.namespaceDefaultOffsetY = -size * 1.25;
 		
-		namespace = new Namespace(this, this.namespaceDefaultOffsetX, this.namespaceDefaultOffsetY, VertexNameConvention.getNextName());
+		namespace = new Namespace(this, this.namespaceDefaultOffsetX, this.namespaceDefaultOffsetY, graph.getWorkspace().getVertexNameConvention().getNextName());
 		graph.getWorkspace().addNode(namespace.getNode());
 		
 		graph.update();

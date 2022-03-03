@@ -15,6 +15,7 @@ import sk.dualnexon.dualgraph.App;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.ui.Updatable;
+import sk.dualnexon.dualgraph.util.VertexNameConvention;
 
 public class Workspace implements Updatable {
 	
@@ -26,6 +27,7 @@ public class Workspace implements Updatable {
 	private Scene scene;
 	private Graph graph;
 	private Grid grid;
+	private VertexNameConvention vertexNameConvention;
 	private DebugMonitor debugMonitor;
 	
 	private SelectionRectangle selectionRectangle;
@@ -42,6 +44,7 @@ public class Workspace implements Updatable {
 		scene = new Scene(root);
 		graph = new Graph(this);
 		grid = new Grid(this);
+		vertexNameConvention = new VertexNameConvention();
 		debugMonitor = new DebugMonitor(this);
 		
 		scene.setOnMouseClicked(e -> {
@@ -211,6 +214,10 @@ public class Workspace implements Updatable {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public VertexNameConvention getVertexNameConvention() {
+		return vertexNameConvention;
 	}
 
 	@Override

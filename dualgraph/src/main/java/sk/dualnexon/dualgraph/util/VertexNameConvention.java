@@ -1,23 +1,23 @@
 package sk.dualnexon.dualgraph.util;
 
-public abstract class VertexNameConvention {
+public class VertexNameConvention {
 	
-	private static String currentName = Character.toString(('A'-1));
+	private String currentName = Character.toString(('A'-1));
 	
-	public static void reset() {
+	public void reset() {
 		currentName = Character.toString(('A'-1));
 	}
 	
-	public static String getNextName() {
+	public String getNextName() {
 		shiftName();
 		return getCurrentName();
 	}
 	
-	public static String getCurrentName() {
+	public String getCurrentName() {
 		return currentName;
 	}
 	
-	private static void shiftName() {
+	private void shiftName() {
 		
 		StringBuilder sb = new StringBuilder(currentName);
 		
