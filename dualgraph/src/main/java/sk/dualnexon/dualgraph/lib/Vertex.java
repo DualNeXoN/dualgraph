@@ -25,7 +25,7 @@ public class Vertex extends BaseGraphNode {
 	private ContextMenu contextMenu;
 	
 	public Vertex(Graph graph, double positionX, double positionY, double size) {
-		this.graph = graph;
+		super(graph);
 		
 		node = new Circle(positionX, positionY, size);
 		this.size = size;

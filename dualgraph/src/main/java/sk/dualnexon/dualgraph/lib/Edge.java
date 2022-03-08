@@ -26,7 +26,7 @@ public class Edge extends BaseGraphNode {
 	private ContextMenu contextMenu;
 	
 	public Edge(Graph graph, Vertex vertex1, Vertex vertex2, double value) {
-		this.graph = graph;
+		super(graph);
 		this.firstVertex = vertex1;
 		this.secondVertex = vertex2;
 		this.value = value;

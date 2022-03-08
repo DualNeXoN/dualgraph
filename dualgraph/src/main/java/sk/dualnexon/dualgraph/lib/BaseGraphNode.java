@@ -7,6 +7,10 @@ public abstract class BaseGraphNode implements Updatable {
 	
 	protected Graph graph;
 	
+	public BaseGraphNode(Graph graph) {
+		this.graph = graph;
+	}
+	
 	public Graph getGraph() {
 		return graph;
 	}
