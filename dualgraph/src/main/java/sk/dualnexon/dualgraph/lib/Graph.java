@@ -47,6 +47,12 @@ public class Graph implements Updatable {
 	}
 	
 	public void addEdge(Edge edge) {
+		for(Edge edgeInstance : edges) {
+			if(edge.getFirstVertex().equals(edgeInstance.getFirstVertex()) && edge.getSecondVertex().equals(edgeInstance.getSecondVertex()) || edge.getFirstVertex().equals(edgeInstance.getSecondVertex()) && edge.getSecondVertex().equals(edgeInstance.getFirstVertex())) {
+				edge.destroy();
+				return;
+			}
+		}
 		edges.add(edge);
 		update();
 	}
