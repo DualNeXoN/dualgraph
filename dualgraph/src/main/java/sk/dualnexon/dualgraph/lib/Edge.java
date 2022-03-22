@@ -10,22 +10,33 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 import sk.dualnexon.dualgraph.ui.Namespace;
+import sk.dualnexon.dualgraph.ui.Updatable;
 
 public class Edge extends BaseGraphNode {
 	
 	private static final double DEFAULT_VALUE = 1;
+	private static final DirectionType DEFAULT_DIRECTION = DirectionType.UNIDIRECTIONAL;
+	
+	public enum DirectionType {
+		UNIDIRECTIONAL, BIDIRECTIONAL;
+	}
 	
 	private Line node;
 	private Vertex firstVertex, secondVertex;
 	private double value;
+	private DirectionType direction;
+	private Vertex vertexDirection = null;
 	private boolean selected = false;
 	
 	private Namespace namespace;
 	
 	private ContextMenu contextMenu;
 	
-	public Edge(Graph graph, Vertex vertex1, Vertex vertex2, double value) {
+	private EdgeArrow arrow;
+	
+	public Edge(Graph graph, Vertex vertex1, Vertex vertex2, double value, DirectionType direction) {
 		super(graph);
 		this.firstVertex = vertex1;
 		this.secondVertex = vertex2;
@@ -38,6 +49,8 @@ public class Edge extends BaseGraphNode {
 		namespace.setValueLocked(true);
 		graph.getWorkspace().addNode(namespace.getNode());
 		
+		setDirection(direction);
+		
 		update();
 		
 		contextMenuCreation();
@@ -45,7 +58,7 @@ public class Edge extends BaseGraphNode {
 	}
 	
 	public Edge(Graph graph, Vertex vertex1, Vertex vertex2) {
-		this(graph, vertex1, vertex2, DEFAULT_VALUE);
+		this(graph, vertex1, vertex2, DEFAULT_VALUE, DEFAULT_DIRECTION);
 	}
 	
 	private void contextMenuCreation() {
@@ -93,7 +106,14 @@ public class Edge extends BaseGraphNode {
 				}
 			}
 		});
-		contextMenu.getItems().addAll(item2, item4, item3, item1);
+		MenuItem item5 = new MenuItem("Directed/Undirected");
+		item5.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				toggleDirectionMode();
+			}
+		});
+		contextMenu.getItems().addAll(item2, item5, item4, item3, item1);
 		
 	}
 	
@@ -144,6 +164,52 @@ public class Edge extends BaseGraphNode {
 		return value;
 	}
 	
+	public DirectionType getDirection() {
+		return direction;
+	}
+	
+	public void setDirection(DirectionType direction) {
+		this.direction = direction;
+		applyDirectionChanges();
+	}
+	
+	public void toggleDirectionMode() {
+		setDirection(isDirected() ? DirectionType.BIDIRECTIONAL : DirectionType.UNIDIRECTIONAL);
+	}
+	
+	public boolean isDirected() {
+		return direction.equals(DirectionType.UNIDIRECTIONAL);
+	}
+	
+	public void toggleVertexDirection() {
+		vertexDirection = (vertexDirection.equals(secondVertex) ? firstVertex : secondVertex);
+		graph.update();
+	}
+	
+	private void applyDirectionChanges() {
+		switch(direction) {
+		
+		case UNIDIRECTIONAL:
+			
+			if(vertexDirection == null) {
+				vertexDirection = secondVertex;
+			}
+			
+			arrow = new EdgeArrow(getRealPositionX(), getRealPositionY(), 14, 40);
+	        
+			getWorkspace().addNode(arrow);
+			break;
+			
+		case BIDIRECTIONAL:
+			
+			if(arrow != null) {
+				arrow.destroy();
+				arrow = null;
+			}
+			break;
+		}
+	}
+	
 	public Line getNode() {
 		return node;
 	}
@@ -178,6 +244,10 @@ public class Edge extends BaseGraphNode {
 	public void destroy() {
 		graph.getWorkspace().removeNode(node);
 		graph.removeEdge(this);
+		
+		if(arrow != null) {
+			arrow.destroy();
+		}
 		namespace.destroy();
 	}
 
@@ -198,7 +268,92 @@ public class Edge extends BaseGraphNode {
 		
 		node.toFront();
 		
+		if(isDirected()) {
+			arrow.update();
+		}
+		
 		namespace.update();
+	}
+	
+	class EdgeArrow extends Polygon implements Updatable {
+		
+		private ContextMenu contextMenu;
+		
+		public EdgeArrow(double positionX, double positionY, double length, double angle) {
+			
+			getPoints().addAll(new Double[] {
+				0d, 0d,
+				(length * Math.tan(angle)), -length,
+		        -(length * Math.tan(angle)), -length
+			});
+			
+			contextMenu = new ContextMenu();
+			MenuItem item1 = new MenuItem("Swap vertex direction");
+			item1.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent e) {
+					toggleVertexDirection();
+				}
+			});
+			contextMenu.getItems().addAll(item1);
+			
+			setOnContextMenuRequested((e) -> {
+				contextMenu.show(node, e.getScreenX(), e.getScreenY());
+			});
+			
+			update();
+		    
+		    setFill(Color.GOLD);
+		    setStroke(Color.BLACK);
+		}
+		
+		private double calculateAngle() {
+			
+			Vertex vertexFrom = null, vertexTo = null;
+			if(vertexDirection.equals(secondVertex)) {
+				vertexFrom = firstVertex;
+				vertexTo = secondVertex;
+			} else {
+				vertexFrom = secondVertex;
+				vertexTo = firstVertex;
+			}
+			
+		    double angle = Math.toDegrees(Math.atan2(vertexTo.getPositionX() - vertexFrom.getPositionX(), vertexTo.getPositionY() - vertexFrom.getPositionY()));
+		    return angle + Math.ceil( -angle / 360 ) * 360;
+		}
+		
+		public double getAngleOfLineBetweenTwoPoints() {
+			
+			Vertex p1 = null, p2 = null;
+			if(vertexDirection.equals(secondVertex)) {
+				p1 = firstVertex;
+				p2 = secondVertex;
+			} else {
+				p1 = secondVertex;
+				p2 = firstVertex;
+			}
+			
+	        double xDiff = p2.getRealPositionX() - p1.getRealPositionX();
+	        double yDiff = p2.getRealPositionY() - p1.getRealPositionY();
+	        return Math.toDegrees(Math.atan2(yDiff, xDiff));
+	    }
+
+		@Override
+		public void destroy() {
+			graph.getWorkspace().removeNode(this);
+		}
+
+		@Override
+		public void update() {
+			
+			setLayoutX(getRealPositionX());
+		    setLayoutY(getRealPositionY());
+			
+			setRotate(-calculateAngle());
+			
+			toFront();
+		}
+		
 	}
 
 }
