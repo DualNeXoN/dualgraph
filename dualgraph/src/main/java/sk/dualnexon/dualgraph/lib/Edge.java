@@ -64,29 +64,29 @@ public class Edge extends BaseGraphNode {
 	private void contextMenuCreation() {
 		
 		contextMenu = new ContextMenu();
-		MenuItem item1 = new MenuItem("Delete " + getClass().getSimpleName());
-		item1.setOnAction(new EventHandler<ActionEvent>() {
+		MenuItem deleteItem = new MenuItem("Delete " + getClass().getSimpleName());
+		deleteItem.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				destroy();
 			}
 		});
-		MenuItem item2 = new MenuItem((selected ? "Unselect " : "Select ") + getClass().getSimpleName());
-		item2.setOnAction(new EventHandler<ActionEvent>() {
+		MenuItem selectItem = new MenuItem((selected ? "Unselect " : "Select ") + getClass().getSimpleName());
+		selectItem.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				toggleSelected();
 			}
 		});
-		MenuItem item3 = new MenuItem("Reset namespace offset");
-		item3.setOnAction(new EventHandler<ActionEvent>() {
+		MenuItem resetOffsetItem = new MenuItem("Reset namespace offset");
+		resetOffsetItem.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				namespace.resetOffset();
 			}
 		});
-		MenuItem item4 = new MenuItem("Change value");
-		item4.setOnAction(new EventHandler<ActionEvent>() {
+		MenuItem valueItem = new MenuItem("Change value");
+		valueItem.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				TextInputDialog dialog = new TextInputDialog(namespace.getText());
@@ -106,14 +106,14 @@ public class Edge extends BaseGraphNode {
 				}
 			}
 		});
-		MenuItem item5 = new MenuItem("Directed/Undirected");
-		item5.setOnAction(new EventHandler<ActionEvent>() {
+		MenuItem directionItem = new MenuItem("Directed/Undirected");
+		directionItem.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				toggleDirectionMode();
 			}
 		});
-		contextMenu.getItems().addAll(item2, item5, item4, item3, item1);
+		contextMenu.getItems().addAll(selectItem, directionItem, valueItem, resetOffsetItem, deleteItem);
 		
 	}
 	
@@ -288,14 +288,14 @@ public class Edge extends BaseGraphNode {
 			});
 			
 			contextMenu = new ContextMenu();
-			MenuItem item1 = new MenuItem("Swap vertex direction");
-			item1.setOnAction(new EventHandler<ActionEvent>() {
+			MenuItem swapDirectionItem = new MenuItem("Swap vertex direction");
+			swapDirectionItem.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent e) {
 					toggleVertexDirection();
 				}
 			});
-			contextMenu.getItems().addAll(item1);
+			contextMenu.getItems().addAll(swapDirectionItem);
 			
 			setOnContextMenuRequested((e) -> {
 				contextMenu.show(node, e.getScreenX(), e.getScreenY());
