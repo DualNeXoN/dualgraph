@@ -3,6 +3,7 @@ package sk.dualnexon.dualgraph.window;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import sk.dualnexon.dualgraph.App;
 import sk.dualnexon.dualgraph.ui.Updatable;
 
 public class Grid extends Canvas implements Updatable {
@@ -34,8 +35,8 @@ public class Grid extends Canvas implements Updatable {
 	@Override
 	public void update() {
 		
-		setWidth(workspace.getScene().getWidth());
-		setHeight(workspace.getScene().getHeight());
+		setWidth(App.get().getScene().getWidth());
+		setHeight(App.get().getScene().getHeight());
 		
 		g2d.clearRect(0, 0, getWidth(), getHeight());
 		

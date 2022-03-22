@@ -26,8 +26,8 @@ public class Namespace implements Updatable {
 		
 		node.setOnMouseDragged(e -> {
 			if(e.isPrimaryButtonDown()) {
-				setOffsetX(e.getSceneX() - graphNode.getRealPositionX() - node.getBoundsInLocal().getWidth() / 2);
-				setOffsetY(e.getSceneY() - graphNode.getRealPositionY() + node.getBoundsInLocal().getHeight() / 2);
+				setOffsetX(e.getX() - graphNode.getRealPositionX() - node.getBoundsInLocal().getWidth() / 2);
+				setOffsetY(e.getY() - graphNode.getRealPositionY() + node.getBoundsInLocal().getHeight() / 2);
 				node.setCursor(Cursor.CLOSED_HAND);
 			}
 		});
@@ -139,7 +139,7 @@ public class Namespace implements Updatable {
 
 	@Override
 	public void destroy() {
-		App.get().getWorkspace().removeNode(node);
+		App.get().findAndRemoveFromWorkspace(node);
 	}
 	
 }

@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import sk.dualnexon.dualgraph.App;
 import sk.dualnexon.dualgraph.lib.Edge;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.ui.Updatable;
@@ -36,11 +37,16 @@ public class DebugMonitor implements Updatable {
 		updateTask = new Timeline(new KeyFrame(Duration.millis(200), new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				update();
+				if(App.get().getTabPane().getSelectionModel().getSelectedItem() != null) {
+					if(App.get().getTabPane().getSelectionModel().getSelectedItem().equals(workspace)) {
+						update();
+					}
+				} else {
+					updateTask.stop();
+				}
 			}
 		}));
 		updateTask.setCycleCount(Timeline.INDEFINITE);
-		updateTask.play();
 		
 	}
 	
@@ -59,6 +65,15 @@ public class DebugMonitor implements Updatable {
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 		container.setVisible(visible);
+		setUpdating(visible);
+	}
+	
+	public void setUpdating(boolean canUpdate) {
+		if(canUpdate) {
+			updateTask.play();
+		} else {
+			updateTask.stop();
+		}
 	}
 	
 	public void toggleVisibility() {

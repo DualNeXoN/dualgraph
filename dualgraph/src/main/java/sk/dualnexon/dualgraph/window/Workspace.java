@@ -1,5 +1,7 @@
 package sk.dualnexon.dualgraph.window;
 
+import java.util.Optional;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
@@ -9,7 +11,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TextInputDialog;
 import javafx.util.Duration;
 import sk.dualnexon.dualgraph.App;
 import sk.dualnexon.dualgraph.lib.Graph;
@@ -17,14 +22,12 @@ import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.ui.Updatable;
 import sk.dualnexon.dualgraph.util.VertexNameConvention;
 
-public class Workspace implements Updatable {
+public class Workspace extends Tab implements Updatable {
 	
-	private static final double MAX_OFFSET = 500;
+	private static final double MAX_OFFSET = 1500;
 	
 	private String name;
 	
-	private Group root;
-	private Scene scene;
 	private Graph graph;
 	private Grid grid;
 	private VertexNameConvention vertexNameConvention;
@@ -37,48 +40,47 @@ public class Workspace implements Updatable {
 	private boolean stageMove = false;
 
 	public Workspace(String name) {
+		super(name, new Group());
 		
 		setName(name);
 		
-		root = new Group();
-		scene = new Scene(root);
 		graph = new Graph(this);
 		grid = new Grid(this);
 		vertexNameConvention = new VertexNameConvention();
 		debugMonitor = new DebugMonitor(this);
 		
-		scene.setOnMouseClicked(e -> {
+		getContent().setOnMouseClicked(e -> {
 			if(e.isControlDown()) {
-				double x = e.getSceneX();
-				double y = e.getSceneY();
+				double x = e.getX();
+				double y = e.getY();
 				graph.addVertex(new Vertex(graph, x + offsetX, y + offsetY));
 			}
 		});
 		
-		scene.setOnMousePressed(e -> {
+		getContent().setOnMousePressed(e -> {
 			if(e.isMiddleButtonDown()) {
 				setStageMove(true);
 				setInitialDragX(e.getSceneX());
 				setInitialDragY(e.getSceneY());
 				update();
 			} else if(e.isPrimaryButtonDown() && e.isShiftDown()) {
-				selectionRectangle = new SelectionRectangle(this, e.getSceneX(), e.getSceneY());
+				selectionRectangle = new SelectionRectangle(this, e.getX(), e.getY());
 			}
 		});
 		
-		scene.setOnMouseDragged(e -> {
+		getContent().setOnMouseDragged(e -> {
 			if(getStageMove()) {
 				setOffsetX(e.getSceneX());
 				setOffsetY(e.getSceneY());
 				update();
 			} else if(selectionRectangle != null && e.isShiftDown()) {
-				selectionRectangle.setEndPositionX(e.getSceneX());
-				selectionRectangle.setEndPositionY(e.getSceneY());
+				selectionRectangle.setEndPositionX(e.getX());
+				selectionRectangle.setEndPositionY(e.getY());
 				selectionRectangle.update();
 			}
 		});
 		
-		scene.setOnMouseReleased(e -> {
+		getContent().setOnMouseReleased(e -> {
 			if(getStageMove()) {
 				setStageMove(false);
 			}
@@ -89,9 +91,27 @@ public class Workspace implements Updatable {
 			}
 		});
 		
-		Timeline delayedUpdateOnCreate = new Timeline(new KeyFrame(Duration.millis(200), new EventHandler<ActionEvent>() {
+		ContextMenu contextMenu = new ContextMenu();
+		MenuItem renameItem = new MenuItem("Rename");
+		renameItem.setOnAction(e -> {
+			TextInputDialog dialog = new TextInputDialog(getName());
+			dialog.setHeaderText(null);
+			dialog.setGraphic(null);
+			dialog.setTitle("DualGraph action");
+			dialog.setContentText("Enter new name:");
+
+			Optional<String> result = dialog.showAndWait();
+			if(result.isPresent()) {
+				setName(result.get());
+			}
+		});
+		contextMenu.getItems().addAll(renameItem);
+		setContextMenu(contextMenu);
+		
+		Timeline delayedUpdateOnCreate = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				App.get().getTabPane().requestLayout();
 				update();
 			}
 		}));
@@ -106,7 +126,7 @@ public class Workspace implements Updatable {
 	    App.get().getBaseWindow().maximizedProperty().addListener(new ChangeListener<Boolean>() {
 	        @Override
 	        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-	        	Timeline delayer = new Timeline(new KeyFrame(Duration.millis(200), new EventHandler<ActionEvent>() {
+	        	Timeline delayer = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
 	        		@Override
 	    			public void handle(ActionEvent event) {
 	        			update();
@@ -115,33 +135,15 @@ public class Workspace implements Updatable {
 	        	delayer.play();
 	        }
 	    });
-	    
-	    scene.setOnKeyPressed(e -> {
-	    	switch(e.getCode()) {
-	    	case F3:
-	    		debugMonitor.toggleVisibility();
-	    		break;
-	    	default:
-	    		break;
-	    	}
-	    });
 		
 	}
 	
 	public void addNode(Node node) {
-		root.getChildren().add(node);
+		((Group) getContent()).getChildren().add(node);
 	}
 	
 	public void removeNode(Node node) {
-		root.getChildren().remove(node);
-	}
-	
-	public Group getRoot() {
-		return root;
-	}
-	
-	public Scene getScene() {
-		return scene;
+		((Group) getContent()).getChildren().remove(node);
 	}
 	
 	public Graph getGraph() {
@@ -195,11 +197,11 @@ public class Workspace implements Updatable {
 	public void setStageMove(boolean stageMove) {
 		this.stageMove = stageMove;
 		if (stageMove) {
-			scene.setCursor(Cursor.CLOSED_HAND);
+			getContent().setCursor(Cursor.CLOSED_HAND);
 			this.lastOffsetX = this.offsetX;
 			this.lastOffsetY = this.offsetY;
 		} else {
-			scene.setCursor(Cursor.DEFAULT);
+			getContent().setCursor(Cursor.DEFAULT);
 		}
 	}
 	
@@ -209,7 +211,7 @@ public class Workspace implements Updatable {
 	
 	public void setName(String name) {
 		this.name = name;
-		App.get().getBaseWindow().setTitle("DualGraph - " + name);
+		setText(name);
 	}
 	
 	public String getName() {
@@ -218,6 +220,10 @@ public class Workspace implements Updatable {
 	
 	public VertexNameConvention getVertexNameConvention() {
 		return vertexNameConvention;
+	}
+	
+	public void toggleDebugMonitor() {
+		debugMonitor.toggleVisibility();
 	}
 
 	@Override

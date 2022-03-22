@@ -136,8 +136,12 @@ public class Graph implements Updatable {
 	
 	@Override
 	public void destroy() {
-		for(Edge edge : edges) edge.destroy();
-		for(Vertex vertex : verticies) vertex.destroy();
+		for(int index = edges.size()-1; index >= 0; index--) {
+			edges.get(index).destroy();
+		}
+		for(int index = verticies.size()-1; index >= 0; index--) {
+			verticies.get(index).destroy();
+		}
 	}
 
 	@Override

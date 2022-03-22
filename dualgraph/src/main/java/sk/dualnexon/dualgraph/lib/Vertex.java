@@ -11,7 +11,7 @@ import sk.dualnexon.dualgraph.ui.Namespace;
 
 public class Vertex extends BaseGraphNode {
 	
-	private static final double DEFAULT_SIZE = 25;
+	private static final double DEFAULT_SIZE = 20;
 	private static final double MIN_SIZE = 10;
 	
 	private double positionX, positionY;
@@ -119,8 +119,8 @@ public class Vertex extends BaseGraphNode {
 		
 		node.setOnMouseDragged(e -> {
 			if(e.isPrimaryButtonDown()) {
-				setPositionX(e.getSceneX());
-				setPositionY(e.getSceneY());
+				setPositionX(e.getX());
+				setPositionY(e.getY());
 				node.setCursor(Cursor.CLOSED_HAND);
 			}
 		});
