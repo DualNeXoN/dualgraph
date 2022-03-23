@@ -87,6 +87,7 @@ public class Workspace extends Tab implements Updatable {
 			}
 			
 			if(selectionRectangle != null) {
+				graph.unselectAll();
 				selectionRectangle.destroy();
 				selectionRectangle = null;
 			}

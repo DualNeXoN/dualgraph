@@ -134,6 +134,15 @@ public class Graph implements Updatable {
 		}
 	}
 	
+	public void unselectAll() {
+		for(BaseGraphNode graphNode : verticies) {
+			if(graphNode.isSelected()) graphNode.toggleSelected();
+		}
+		for(BaseGraphNode graphNode : edges) {
+			if(graphNode.isSelected()) graphNode.toggleSelected();
+		}
+	}
+	
 	public AdjacencyList getAdjacencyList() {
 		AdjacencyList adj = new AdjacencyList();
 		

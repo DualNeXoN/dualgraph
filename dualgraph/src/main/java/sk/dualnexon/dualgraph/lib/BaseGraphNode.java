@@ -5,6 +5,7 @@ import sk.dualnexon.dualgraph.window.Workspace;
 
 public abstract class BaseGraphNode implements Updatable {
 	
+	protected boolean selected = false;
 	protected Graph graph;
 	
 	public BaseGraphNode(Graph graph) {
@@ -17,6 +18,20 @@ public abstract class BaseGraphNode implements Updatable {
 	
 	public Workspace getWorkspace() {
 		return graph.getWorkspace();
+	}
+	
+	public boolean isSelected() {
+		return selected;
+	}
+	
+	public void select() {
+		selected = true;
+		graph.update();
+	}
+	
+	public void toggleSelected() {
+		this.selected = !this.selected;
+		graph.update();
 	}
 	
 	public abstract double getRealPositionX();

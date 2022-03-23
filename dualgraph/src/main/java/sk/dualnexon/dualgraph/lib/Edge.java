@@ -28,7 +28,6 @@ public class Edge extends BaseGraphNode {
 	private double value;
 	private DirectionType direction;
 	private Vertex vertexDirection = null;
-	private boolean selected = false;
 	
 	private Namespace namespace;
 	
@@ -222,20 +221,6 @@ public class Edge extends BaseGraphNode {
 	
 	public Line getNode() {
 		return node;
-	}
-	
-	public boolean isSelected() {
-		return selected;
-	}
-	
-	public void select() {
-		selected = true;
-		graph.update();
-	}
-	
-	public void toggleSelected() {
-		this.selected = !this.selected;
-		graph.update();
 	}
 	
 	public double getRealPositionX() {

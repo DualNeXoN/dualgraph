@@ -180,20 +180,6 @@ public class Vertex extends BaseGraphNode {
 		return node;
 	}
 	
-	public boolean isSelected() {
-		return selected;
-	}
-	
-	public void select() {
-		selected = true;
-		graph.update();
-	}
-	
-	public void toggleSelected() {
-		this.selected = !this.selected;
-		graph.update();
-	}
-	
 	public Namespace getNamespace() {
 		return namespace;
 	}
