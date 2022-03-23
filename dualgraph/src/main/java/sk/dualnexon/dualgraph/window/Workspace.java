@@ -20,6 +20,7 @@ import sk.dualnexon.dualgraph.App;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.ui.Updatable;
+import sk.dualnexon.dualgraph.util.FileHandler;
 import sk.dualnexon.dualgraph.util.VertexNameConvention;
 
 public class Workspace extends Tab implements Updatable {
@@ -105,7 +106,11 @@ public class Workspace extends Tab implements Updatable {
 				setName(result.get());
 			}
 		});
-		contextMenu.getItems().addAll(renameItem);
+		MenuItem saveItem = new MenuItem("Save");
+		saveItem.setOnAction(e -> {
+			FileHandler.get().save(this);
+		});
+		contextMenu.getItems().addAll(renameItem, saveItem);
 		setContextMenu(contextMenu);
 		
 		Timeline delayedUpdateOnCreate = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {

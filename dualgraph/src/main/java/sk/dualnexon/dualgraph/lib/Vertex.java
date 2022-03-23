@@ -1,5 +1,7 @@
 package sk.dualnexon.dualgraph.lib;
 
+import java.util.UUID;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -14,6 +16,8 @@ public class Vertex extends BaseGraphNode {
 	private static final double DEFAULT_SIZE = 20;
 	private static final double MIN_SIZE = 10;
 	
+	private String uuid;
+	
 	private double positionX, positionY;
 	private double size;
 	private Circle node;
@@ -26,6 +30,8 @@ public class Vertex extends BaseGraphNode {
 	
 	public Vertex(Graph graph, double positionX, double positionY, double size) {
 		super(graph);
+		
+		uuid = UUID.randomUUID().toString();
 		
 		node = new Circle(positionX, positionY, size);
 		this.size = size;
@@ -190,6 +196,14 @@ public class Vertex extends BaseGraphNode {
 	
 	public Namespace getNamespace() {
 		return namespace;
+	}
+	
+	public String getUUID() {
+		return uuid;
+	}
+	
+	public void setUUID(String uuid) {
+		this.uuid = uuid;
 	}
 	
 	@Override

@@ -15,6 +15,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import sk.dualnexon.dualgraph.util.FileHandler;
 import sk.dualnexon.dualgraph.window.Window;
 import sk.dualnexon.dualgraph.window.Workspace;
 
@@ -34,6 +35,7 @@ public class App extends Application {
     public void start(Stage stage) {
     	instance = this;
     	baseWindow = new Window();
+    	new FileHandler();
     	
     	MenuBar menuBar = new MenuBar();
     	Menu menuFile = new Menu("File");
@@ -42,8 +44,12 @@ public class App extends Application {
     	menuItemNew.setOnAction(e -> {
     		tabPane.getTabs().add(new Workspace("Workspace"));
     	});
+    	MenuItem menuItemOpen = new MenuItem("Open...");
+    	menuItemOpen.setOnAction(e -> {
+    		FileHandler.get().load();
+    	});
     	
-    	menuFile.getItems().add(menuItemNew);
+    	menuFile.getItems().addAll(menuItemNew, menuItemOpen);
     	menuBar.getMenus().add(menuFile);
         VBox menuBox = new VBox(menuBar);
     	

@@ -17,7 +17,7 @@ import sk.dualnexon.dualgraph.ui.Updatable;
 public class Edge extends BaseGraphNode {
 	
 	private static final double DEFAULT_VALUE = 1;
-	private static final DirectionType DEFAULT_DIRECTION = DirectionType.UNIDIRECTIONAL;
+	private static final DirectionType DEFAULT_DIRECTION = DirectionType.BIDIRECTIONAL;
 	
 	public enum DirectionType {
 		UNIDIRECTIONAL, BIDIRECTIONAL;
@@ -36,11 +36,12 @@ public class Edge extends BaseGraphNode {
 	
 	private EdgeArrow arrow;
 	
-	public Edge(Graph graph, Vertex vertex1, Vertex vertex2, double value, DirectionType direction) {
+	public Edge(Graph graph, Vertex vertex1, Vertex vertex2, double value, DirectionType direction, Vertex vertexDirection) {
 		super(graph);
 		this.firstVertex = vertex1;
 		this.secondVertex = vertex2;
 		this.value = value;
+		this.vertexDirection = vertexDirection;
 		
 		node = new Line();
 		graph.getWorkspace().addNode(node);
@@ -58,7 +59,7 @@ public class Edge extends BaseGraphNode {
 	}
 	
 	public Edge(Graph graph, Vertex vertex1, Vertex vertex2) {
-		this(graph, vertex1, vertex2, DEFAULT_VALUE, DEFAULT_DIRECTION);
+		this(graph, vertex1, vertex2, DEFAULT_VALUE, DEFAULT_DIRECTION, null);
 	}
 	
 	private void contextMenuCreation() {
@@ -184,6 +185,10 @@ public class Edge extends BaseGraphNode {
 	public void toggleVertexDirection() {
 		vertexDirection = (vertexDirection.equals(secondVertex) ? firstVertex : secondVertex);
 		graph.update();
+	}
+	
+	public Vertex getVertexDirection() {
+		return vertexDirection;
 	}
 	
 	private void applyDirectionChanges() {
