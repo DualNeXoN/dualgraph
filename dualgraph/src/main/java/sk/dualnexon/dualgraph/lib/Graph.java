@@ -134,6 +134,20 @@ public class Graph implements Updatable {
 		}
 	}
 	
+	public AdjacencyList getAdjacencyList() {
+		AdjacencyList adj = new AdjacencyList();
+		
+		for(Vertex v : verticies) {
+			adj.addVertex(v);
+		}
+		
+		for(Edge e : edges) {
+			adj.addEdge(e);
+		}
+		
+		return adj;
+	}
+	
 	@Override
 	public void destroy() {
 		for(int index = edges.size()-1; index >= 0; index--) {

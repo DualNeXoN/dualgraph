@@ -191,6 +191,11 @@ public class Edge extends BaseGraphNode {
 		return vertexDirection;
 	}
 	
+	public Vertex getVertexDirectionStarting() {
+		if(!isDirected()) return null;
+		return vertexDirection.equals(secondVertex) ? firstVertex : secondVertex;
+	}
+	
 	private void applyDirectionChanges() {
 		switch(direction) {
 		
