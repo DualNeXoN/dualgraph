@@ -4,21 +4,21 @@ import java.util.HashMap;
 
 public class AdjacencyList {
 	
-	private HashMap<Vertex, HashMap<Vertex, Double>> list;
+	private HashMap<Vertex, HashMap<Vertex, Integer>> list;
 	
 	public AdjacencyList() {
-		list = new HashMap<Vertex, HashMap<Vertex, Double>>();
+		list = new HashMap<Vertex, HashMap<Vertex, Integer>>();
 	}
 	
-	public HashMap<Vertex, Double> addVertex(Vertex vertex) {
-		return list.containsKey(vertex) ? list.get(vertex) : list.put(vertex, new HashMap<Vertex, Double>());
+	public HashMap<Vertex, Integer> addVertex(Vertex vertex) {
+		return list.containsKey(vertex) ? list.get(vertex) : list.put(vertex, new HashMap<>());
 	}
 	
 	public void removeVertex(Vertex vertex) {
 		list.remove(vertex);
 	}
 	
-	public HashMap<Vertex, Double> getVertexList(Vertex vertex) {
+	public HashMap<Vertex, Integer> getVertexList(Vertex vertex) {
 		return list.containsKey(vertex) ? list.get(vertex) : null;
 	}
 	
@@ -33,7 +33,7 @@ public class AdjacencyList {
 	}
 	
 	public void removeEdge(Edge edge) {
-		HashMap<Vertex, Double> temp = null;
+		HashMap<Vertex, Integer> temp = null;
 		temp = getVertexList(edge.getFirstVertex());
 		if(temp != null) temp.remove(edge.getSecondVertex());
 		temp = getVertexList(edge.getSecondVertex());
@@ -45,7 +45,7 @@ public class AdjacencyList {
 		
 		for(Vertex rootVertex : list.keySet()) {
 			out += rootVertex.getNamespace().getText();
-			HashMap<Vertex, Double> tempRoot = getVertexList(rootVertex);
+			HashMap<Vertex, Integer> tempRoot = getVertexList(rootVertex);
 			if(tempRoot == null || tempRoot.size() == 0) {
 				out += " {}";
 			} else {

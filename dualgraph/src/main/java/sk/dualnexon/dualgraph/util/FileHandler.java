@@ -126,7 +126,7 @@ public class FileHandler {
 	        	JSONObject obj = edges.getJSONObject(i);
 	        	Vertex firstVertex = getVertexByUUID(w, obj.getString("firstVertex"));
 	        	Vertex secondVertex = getVertexByUUID(w, obj.getString("secondVertex"));
-	        	double value = obj.getDouble("value");
+	        	int value = obj.getInt("value");
 	        	DirectionType directionType = DirectionType.valueOf(obj.getString("directionType"));
 	        	Vertex vertexDirection = getVertexByUUID(w, obj.getString("vertexDirection"));
 	        	Edge e = new Edge(w.getGraph(), firstVertex, secondVertex, value, directionType, vertexDirection);

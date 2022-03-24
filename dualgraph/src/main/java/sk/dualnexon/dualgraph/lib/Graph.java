@@ -67,6 +67,17 @@ public class Graph implements Updatable {
 		update();
 	}
 	
+	public Edge getEdgeByEndPoints(Vertex vertex1, Vertex vertex2) {
+		
+		for(Edge edge : edges) {
+			if((edge.getFirstVertex().equals(vertex1) && edge.getSecondVertex().equals(vertex2)) || (edge.getFirstVertex().equals(vertex2) && edge.getSecondVertex().equals(vertex1))) {
+				return edge;
+			}
+		}
+		
+		return null;
+	}
+	
 	private void removeAllSelected() {
 		LinkedList<Vertex> selectedVerticies = getSelectedVerticies();
 		if(selectedVerticies.size() > 0) selectedVerticies.get(0).destroy();

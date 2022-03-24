@@ -16,7 +16,7 @@ import sk.dualnexon.dualgraph.ui.Updatable;
 
 public class Edge extends BaseGraphNode {
 	
-	private static final double DEFAULT_VALUE = 1;
+	private static final int DEFAULT_VALUE = 1;
 	private static final DirectionType DEFAULT_DIRECTION = DirectionType.BIDIRECTIONAL;
 	
 	public enum DirectionType {
@@ -25,7 +25,7 @@ public class Edge extends BaseGraphNode {
 	
 	private Line node;
 	private Vertex firstVertex, secondVertex;
-	private double value;
+	private int value;
 	private DirectionType direction;
 	private Vertex vertexDirection = null;
 	
@@ -35,7 +35,7 @@ public class Edge extends BaseGraphNode {
 	
 	private EdgeArrow arrow;
 	
-	public Edge(Graph graph, Vertex vertex1, Vertex vertex2, double value, DirectionType direction, Vertex vertexDirection) {
+	public Edge(Graph graph, Vertex vertex1, Vertex vertex2, int value, DirectionType direction, Vertex vertexDirection) {
 		super(graph);
 		this.firstVertex = vertex1;
 		this.secondVertex = vertex2;
@@ -99,7 +99,7 @@ public class Edge extends BaseGraphNode {
 				if(result.isPresent()) {
 					String resultString = result.get();
 					try {
-						setValue(Double.parseDouble(resultString));
+						setValue(Integer.parseInt(resultString));
 					} catch(NumberFormatException ex) {
 						
 					}
@@ -151,7 +151,7 @@ public class Edge extends BaseGraphNode {
 		return secondVertex;
 	}
 	
-	public void setValue(double value) {
+	public void setValue(int value) {
 		this.value = value;
 		String newValueString = "";
 		if(value == (long) value) newValueString = String.format("%d",(long) value);
@@ -160,7 +160,7 @@ public class Edge extends BaseGraphNode {
 		graph.update();
 	}
 	
-	public double getValue() {
+	public int getValue() {
 		return value;
 	}
 	
