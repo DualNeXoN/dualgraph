@@ -212,4 +212,9 @@ public class Vertex extends BaseGraphNode {
 		namespace.update();
 	}
 	
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " " + namespace.getText();
+	}
+	
 }

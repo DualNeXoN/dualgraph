@@ -7,6 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -15,11 +17,18 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import sk.dualnexon.dualgraph.lib.algorithm.BFS;
+import sk.dualnexon.dualgraph.lib.algorithm.BridgeDetection;
+import sk.dualnexon.dualgraph.lib.algorithm.CycleDetection;
+import sk.dualnexon.dualgraph.lib.algorithm.DFS;
+import sk.dualnexon.dualgraph.lib.algorithm.MSTPrim;
 import sk.dualnexon.dualgraph.util.FileHandler;
 import sk.dualnexon.dualgraph.window.Window;
 import sk.dualnexon.dualgraph.window.Workspace;
 
 public class App extends Application {
+	
+	private static final String MSG_NO_WORKSPACE = "No workspace has been chosen";
 	
 	private static App instance;
 	
@@ -50,7 +59,57 @@ public class App extends Application {
     	});
     	
     	menuFile.getItems().addAll(menuItemNew, menuItemOpen);
-    	menuBar.getMenus().add(menuFile);
+    	
+    	Menu menuAlgorithm = new Menu("Algorithm");
+    	
+    	MenuItem menuAlgorithmBFS = new MenuItem("BFS");
+    	menuAlgorithmBFS.setOnAction(e -> {
+    		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
+    		if(currentWorkspace != null) {
+    			new BFS(currentWorkspace).calculate();
+    		} else {
+    			showWarningAlert(MSG_NO_WORKSPACE);
+    		}
+    	});
+    	MenuItem menuAlgorithmDFS = new MenuItem("DFS");
+    	menuAlgorithmDFS.setOnAction(e -> {
+    		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
+    		if(currentWorkspace != null) {
+    			new DFS(currentWorkspace).calculate();
+    		} else {
+    			showWarningAlert(MSG_NO_WORKSPACE);
+    		}
+    	});
+    	MenuItem menuAlgorithmBridgeDetection = new MenuItem("Bridge Detection");
+    	menuAlgorithmBridgeDetection.setOnAction(e -> {
+    		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
+    		if(currentWorkspace != null) {
+    			new BridgeDetection(currentWorkspace).calculate();
+    		} else {
+    			showWarningAlert(MSG_NO_WORKSPACE);
+    		}
+    	});
+    	MenuItem menuAlgorithmCycleDetection = new MenuItem("Cycle Detection");
+    	menuAlgorithmCycleDetection.setOnAction(e -> {
+    		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
+    		if(currentWorkspace != null) {
+    			System.out.println(new CycleDetection(currentWorkspace).calculate());
+    		} else {
+    			showWarningAlert(MSG_NO_WORKSPACE);
+    		}
+    	});
+    	MenuItem menuAlgorithmPrimMST = new MenuItem("Minimal Spanning Tree - Prim");
+    	menuAlgorithmPrimMST.setOnAction(e -> {
+    		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
+    		if(currentWorkspace != null) {
+    			new MSTPrim(currentWorkspace).calculate();
+    		} else {
+    			showWarningAlert(MSG_NO_WORKSPACE);
+    		}
+    	});
+    	
+    	menuAlgorithm.getItems().addAll(menuAlgorithmBFS, menuAlgorithmDFS, menuAlgorithmBridgeDetection, menuAlgorithmCycleDetection, menuAlgorithmPrimMST);
+    	menuBar.getMenus().addAll(menuFile, menuAlgorithm);
         VBox menuBox = new VBox(menuBar);
     	
     	tabPane = new TabPane();
@@ -77,6 +136,10 @@ public class App extends Application {
 	    	case F3:
 	    		((Workspace) tabPane.getSelectionModel().getSelectedItem()).toggleDebugMonitor();
 	    		break;
+	    	case F5:
+	    		MSTPrim prim = new MSTPrim(((Workspace) tabPane.getSelectionModel().getSelectedItem()));
+	    		prim.calculate();
+	    		break;
 	    	default:
 	    		break;
 	    	}
@@ -94,6 +157,12 @@ public class App extends Application {
     public TabPane getTabPane() {
 		return tabPane;
 	}
+    
+    private void showWarningAlert(String titleMessage) {
+    	Alert alert = new Alert(AlertType.WARNING);
+    	alert.setHeaderText(titleMessage);
+    	alert.show();
+    }
     
     public void findAndRemoveFromWorkspace(Node node) {
     	for(Tab tab : tabPane.getTabs()) {
