@@ -4,18 +4,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import sk.dualnexon.dualgraph.lib.AdjacencyList;
+import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
-import sk.dualnexon.dualgraph.window.Workspace;
 
 public class BridgeDetection extends Algorithm {
 	
 	private AdjacencyList adj;
 	private int time = 0;
 	
-	public BridgeDetection(Workspace workspace) {
-		super(workspace);
-		adj = workspace.getGraph().getAdjacencyList();
+	public BridgeDetection(Graph graph) {
+		super(graph);
+		adj = graph.getAdjacencyList();
 	}
 	
 	public void calculate() {
@@ -25,11 +25,11 @@ public class BridgeDetection extends Algorithm {
 		HashMap<Vertex, Integer> low = new HashMap<Vertex, Integer>();
 		HashMap<Vertex, Vertex> parent = new HashMap<Vertex, Vertex>();
 		
-		for(Vertex vertex : workspace.getGraph().getVerticies()) {
+		for(Vertex vertex : graph.getVerticies()) {
 			visited.put(vertex, false);
 		}
 		
-		for(Vertex vertex : workspace.getGraph().getVerticies()) {
+		for(Vertex vertex : graph.getVerticies()) {
 			if(!visited.get(vertex)) {
 				recursive(vertex, visited, disc, low, parent);
 			}

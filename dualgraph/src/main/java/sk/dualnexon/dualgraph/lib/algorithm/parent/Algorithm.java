@@ -1,17 +1,17 @@
 package sk.dualnexon.dualgraph.lib.algorithm.parent;
 
-import sk.dualnexon.dualgraph.window.Workspace;
+import sk.dualnexon.dualgraph.lib.Graph;
 
 public abstract class Algorithm {
 	
-	protected Workspace workspace;
+	protected Graph graph;
 	
-	public Algorithm(Workspace workspace) {
-		this.workspace = workspace;
+	public Algorithm(Graph graph) {
+		this.graph = graph;
 	}
 	
-	public Workspace getWorkspace() {
-		return workspace;
+	public Graph getGraph() {
+		return graph;
 	}
 	
 }

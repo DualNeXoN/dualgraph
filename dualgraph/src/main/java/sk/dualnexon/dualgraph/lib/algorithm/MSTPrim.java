@@ -7,17 +7,17 @@ import java.util.Optional;
 import javafx.scene.control.ChoiceDialog;
 import sk.dualnexon.dualgraph.lib.AdjacencyList;
 import sk.dualnexon.dualgraph.lib.Edge;
+import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
-import sk.dualnexon.dualgraph.window.Workspace;
 
 public class MSTPrim extends Algorithm {
 	
 	private AdjacencyList adj;
 	
-	public MSTPrim(Workspace workspace) {
-		super(workspace);
-		adj = workspace.getGraph().getAdjacencyList();
+	public MSTPrim(Graph graph) {
+		super(graph);
+		adj = graph.getAdjacencyList();
 	}
 
 	public void calculate() {
@@ -30,7 +30,7 @@ public class MSTPrim extends Algorithm {
 		
 		// Map of used verticies
 		HashMap<Vertex, Boolean> used = new HashMap<>();
-		for(Vertex vertex : workspace.getGraph().getVerticies()) {
+		for(Vertex vertex : graph.getVerticies()) {
 			used.put(vertex, false);
 		}
 		used.put(startVertex, true);
@@ -40,7 +40,7 @@ public class MSTPrim extends Algorithm {
 		
 		// Add starting vertex to queue
 		for(Vertex vertex : adj.getVertexList(startVertex).keySet()) {
-			queue.addLast(workspace.getGraph().getEdgeByEndPoints(startVertex, vertex));
+			queue.addLast(graph.getEdgeByEndPoints(startVertex, vertex));
 		}
 		
 		while(!usedAll(used)) {
@@ -72,7 +72,7 @@ public class MSTPrim extends Algorithm {
 				if(used.get(vertex)) {
 					for(Vertex vertex2 : adj.getVertexList(vertex).keySet()) {
 						if(!used.get(vertex2)) {
-							queue.addLast(workspace.getGraph().getEdgeByEndPoints(vertex, vertex2));
+							queue.addLast(graph.getEdgeByEndPoints(vertex, vertex2));
 						}
 					}
 				}
@@ -99,7 +99,7 @@ public class MSTPrim extends Algorithm {
 	}
 	
 	private Vertex getStartingVertex() {
-		ChoiceDialog<Vertex> choiceDialog = new ChoiceDialog<Vertex>(workspace.getGraph().getVerticies().getFirst(), workspace.getGraph().getVerticies());
+		ChoiceDialog<Vertex> choiceDialog = new ChoiceDialog<Vertex>(graph.getVerticies().getFirst(), graph.getVerticies());
 		choiceDialog.setHeaderText(null);
 		choiceDialog.setContentText("Select starting vertex:");
 		Optional<Vertex> opt = choiceDialog.showAndWait();

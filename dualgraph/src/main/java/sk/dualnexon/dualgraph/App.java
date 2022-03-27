@@ -66,7 +66,7 @@ public class App extends Application {
     	menuAlgorithmBFS.setOnAction(e -> {
     		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
     		if(currentWorkspace != null) {
-    			new BFS(currentWorkspace).calculate();
+    			new BFS(currentWorkspace.getGraph()).calculate();
     		} else {
     			showWarningAlert(MSG_NO_WORKSPACE);
     		}
@@ -75,7 +75,7 @@ public class App extends Application {
     	menuAlgorithmDFS.setOnAction(e -> {
     		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
     		if(currentWorkspace != null) {
-    			new DFS(currentWorkspace).calculate();
+    			new DFS(currentWorkspace.getGraph()).calculate();
     		} else {
     			showWarningAlert(MSG_NO_WORKSPACE);
     		}
@@ -84,7 +84,7 @@ public class App extends Application {
     	menuAlgorithmBridgeDetection.setOnAction(e -> {
     		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
     		if(currentWorkspace != null) {
-    			new BridgeDetection(currentWorkspace).calculate();
+    			new BridgeDetection(currentWorkspace.getGraph()).calculate();
     		} else {
     			showWarningAlert(MSG_NO_WORKSPACE);
     		}
@@ -93,7 +93,7 @@ public class App extends Application {
     	menuAlgorithmCycleDetection.setOnAction(e -> {
     		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
     		if(currentWorkspace != null) {
-    			System.out.println(new CycleDetection(currentWorkspace).calculate());
+    			System.out.println(new CycleDetection(currentWorkspace.getGraph()).calculate());
     		} else {
     			showWarningAlert(MSG_NO_WORKSPACE);
     		}
@@ -102,7 +102,7 @@ public class App extends Application {
     	menuAlgorithmPrimMST.setOnAction(e -> {
     		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
     		if(currentWorkspace != null) {
-    			new MSTPrim(currentWorkspace).calculate();
+    			new MSTPrim(currentWorkspace.getGraph()).calculate();
     		} else {
     			showWarningAlert(MSG_NO_WORKSPACE);
     		}
@@ -135,10 +135,6 @@ public class App extends Application {
 	    	switch(e.getCode()) {
 	    	case F3:
 	    		((Workspace) tabPane.getSelectionModel().getSelectedItem()).toggleDebugMonitor();
-	    		break;
-	    	case F5:
-	    		MSTPrim prim = new MSTPrim(((Workspace) tabPane.getSelectionModel().getSelectedItem()));
-	    		prim.calculate();
 	    		break;
 	    	default:
 	    		break;

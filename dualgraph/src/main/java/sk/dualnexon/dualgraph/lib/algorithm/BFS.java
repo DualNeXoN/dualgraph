@@ -6,14 +6,14 @@ import java.util.LinkedList;
 import java.util.Optional;
 
 import javafx.scene.control.ChoiceDialog;
+import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
-import sk.dualnexon.dualgraph.window.Workspace;
 
 public class BFS extends Algorithm {
 	
-	public BFS(Workspace workspace) {
-		super(workspace);
+	public BFS(Graph graph) {
+		super(graph);
 	}
 	
 	public void calculate() {
@@ -25,7 +25,7 @@ public class BFS extends Algorithm {
 		}
 		
         HashMap<Vertex, Boolean> visited = new HashMap<>();
-        for(Vertex v : workspace.getGraph().getVerticies()) {
+        for(Vertex v : graph.getVerticies()) {
         	visited.put(v, false);
         }
  
@@ -39,7 +39,7 @@ public class BFS extends Algorithm {
             s = queue.poll();
             System.out.print(s.getNamespace().getText() + " ");
  
-            Iterator<Vertex> i = workspace.getGraph().getAdjacencyList().getVertexList(s).keySet().iterator();
+            Iterator<Vertex> i = graph.getAdjacencyList().getVertexList(s).keySet().iterator();
             while(i.hasNext()) {
                 Vertex n = i.next();
                 if(!visited.get(n)) {
@@ -54,7 +54,7 @@ public class BFS extends Algorithm {
 	}
 	
 	private Vertex getStartingVertex() {
-		ChoiceDialog<Vertex> choiceDialog = new ChoiceDialog<Vertex>(workspace.getGraph().getVerticies().getFirst(), workspace.getGraph().getVerticies());
+		ChoiceDialog<Vertex> choiceDialog = new ChoiceDialog<Vertex>(graph.getVerticies().getFirst(), graph.getVerticies());
 		choiceDialog.setHeaderText(null);
 		choiceDialog.setContentText("Select starting vertex:");
 		Optional<Vertex> opt = choiceDialog.showAndWait();
