@@ -19,6 +19,8 @@ import javafx.util.Duration;
 import sk.dualnexon.dualgraph.App;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
+import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
 import sk.dualnexon.dualgraph.ui.Updatable;
 import sk.dualnexon.dualgraph.util.FileHandler;
 import sk.dualnexon.dualgraph.util.VertexNameConvention;
@@ -33,6 +35,8 @@ public class Workspace extends Tab implements Updatable {
 	private Grid grid;
 	private VertexNameConvention vertexNameConvention;
 	private DebugMonitor debugMonitor;
+	
+	private Algorithm algorithm = null;
 	
 	private SelectionRectangle selectionRectangle;
 	
@@ -150,6 +154,25 @@ public class Workspace extends Tab implements Updatable {
 	
 	public void removeNode(Node node) {
 		((Group) getContent()).getChildren().remove(node);
+	}
+	
+	public void applyAlgorithm(Algorithm algorithm) {
+		destroyCurrentAlgorithm();
+		try {
+			algorithm.calculate();
+			this.algorithm = algorithm;
+			graph.setLocked(true);
+		} catch (AlgorithmException ex) {
+			algorithm.destroy();
+			App.get().showWarningAlert(ex.getMessage());
+		}
+	}
+	
+	public void destroyCurrentAlgorithm() {
+		if(algorithm == null) return;
+		algorithm.destroy();
+		algorithm = null;
+		graph.setLocked(false);
 	}
 	
 	public Graph getGraph() {

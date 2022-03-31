@@ -12,7 +12,7 @@ public class CycleDetection extends Algorithm {
 		super(graph);
 	}
 	
-	public boolean calculate() {
+	public void calculate() {
 
 		HashMap<Vertex, Boolean> visited = new HashMap<>();
 		for(Vertex v : graph.getVerticies()) {
@@ -25,10 +25,10 @@ public class CycleDetection extends Algorithm {
 		}
 
 		for(Vertex v : graph.getVerticies()) {
-			if(recursive(v, visited, recStack)) return true;
+			System.out.println("Z vrcholu " + v.getNamespace().getText() + " je cyklický? " + recursive(v, visited, recStack)); //TODO neskor bude doplnena konzola do appky
 		}
-
-		return false;
+		
+		finished();
 	}
 	
 	private boolean recursive(Vertex v, HashMap<Vertex, Boolean> visited, HashMap<Vertex, Boolean> recStack) {

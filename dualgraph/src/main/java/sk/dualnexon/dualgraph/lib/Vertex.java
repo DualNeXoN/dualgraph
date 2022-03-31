@@ -15,13 +15,14 @@ public class Vertex extends BaseGraphNode {
 	
 	private static final double DEFAULT_SIZE = 20;
 	private static final double MIN_SIZE = 10;
+	private static final Color DEFAULT_COLOR = Color.BLACK;
 	
 	private String uuid;
 	
 	private double positionX, positionY;
 	private double size;
 	private Circle node;
-	private boolean selected = false;
+	private Color color = DEFAULT_COLOR;
 	
 	private Namespace namespace;
 	private double namespaceDefaultOffsetX, namespaceDefaultOffsetY;
@@ -113,11 +114,13 @@ public class Vertex extends BaseGraphNode {
 	private void events() {
 		
 		node.setOnContextMenuRequested((e) -> {
+			if(graph.isLocked()) return;
 			contextMenu.show(node, e.getScreenX(), e.getScreenY());
 		});
 		
 		node.setOnMouseReleased((e) -> {
 			if(e.isShiftDown()) {
+				if(graph.isLocked()) return;
 				toggleSelected();
 			}
 			node.setCursor(Cursor.HAND);
@@ -168,12 +171,21 @@ public class Vertex extends BaseGraphNode {
 	}
 	
 	public void setSize(double size) {
+		if(graph.isLocked()) return;
 		this.size = (size < MIN_SIZE ? MIN_SIZE : size);
 		graph.update();
 	}
 	
 	public double getSize() {
 		return size;
+	}
+	
+	public void setColor(Color color) {
+		this.color = (color != null ? color : DEFAULT_COLOR);
+	}
+	
+	public Color getColor() {
+		return color;
 	}
 	
 	public Circle getNode() {
@@ -205,7 +217,7 @@ public class Vertex extends BaseGraphNode {
 		node.setCenterY(getRealPositionY());
 		node.setRadius(size);
 		node.setFill(Color.WHITE);
-		node.setStroke((isSelected() ? Color.RED : Color.BLACK));
+		node.setStroke((isSelected() ? Color.RED : color));
 		node.setStrokeWidth(2);
 		node.toFront();
 		

@@ -15,6 +15,8 @@ public class Graph implements Updatable {
 	
 	private Vertex startingVertex, endingVertex;
 	
+	private boolean locked = false;
+	
 	public Graph(Workspace workspace) {
 		this.workspace = workspace;
 		verticies = new LinkedList<>();
@@ -143,6 +145,14 @@ public class Graph implements Updatable {
 		for(Vertex vertex : verticies) {
 			vertex.setSize(vertex.getSize()-ZOOM_FACTOR);
 		}
+	}
+	
+	public void setLocked(boolean locked) {
+		this.locked = locked;
+	}
+	
+	public boolean isLocked() {
+		return locked;
 	}
 	
 	public void unselectAll() {

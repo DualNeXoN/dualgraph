@@ -25,11 +25,13 @@ public abstract class BaseGraphNode implements Updatable {
 	}
 	
 	public void select() {
+		if(graph.isLocked()) return;
 		selected = true;
 		graph.update();
 	}
 	
 	public void toggleSelected() {
+		if(graph.isLocked()) return;
 		this.selected = !this.selected;
 		graph.update();
 	}

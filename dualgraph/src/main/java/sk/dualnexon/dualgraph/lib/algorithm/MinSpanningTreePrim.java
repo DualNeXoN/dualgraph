@@ -2,25 +2,33 @@ package sk.dualnexon.dualgraph.lib.algorithm;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Optional;
 
-import javafx.scene.control.ChoiceDialog;
 import sk.dualnexon.dualgraph.lib.AdjacencyList;
 import sk.dualnexon.dualgraph.lib.Edge;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.NoVerticiesException;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.UnsupportedGraphException;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
+import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
 
-public class MSTPrim extends Algorithm {
+public class MinSpanningTreePrim extends Algorithm {
 	
 	private AdjacencyList adj;
+	private AdjacencyList adjMask;
 	
-	public MSTPrim(Graph graph) {
+	public MinSpanningTreePrim(Graph graph) {
 		super(graph);
 		adj = graph.getAdjacencyList();
+		adjMask = new AdjacencyList();
 	}
 
-	public void calculate() {
+	public void calculate() throws AlgorithmException {
+		
+		if(graph.getVerticies().size() == 0) {
+			throw new NoVerticiesException(this);
+		}
 		
 		Vertex startVertex = getStartingVertex();
 		
@@ -50,7 +58,7 @@ public class MSTPrim extends Algorithm {
 			if(queue.size() == 1) {
 				nextAddedEdge = queue.get(0);
 				queue.remove(0);
-			} else {
+			} else if(queue.size() > 1) {
 				nextAddedEdge = queue.get(0);
 				for(int index = 1; index < queue.size(); index++) {
 					if(queue.get(index).getValue() < nextAddedEdge.getValue()) {
@@ -58,12 +66,19 @@ public class MSTPrim extends Algorithm {
 					}
 				}
 				queue.remove(nextAddedEdge);
+			} else {
+				throw new UnsupportedGraphException(this);
 			}
 			
 			if(nextAddedEdge != null) {
 				used.put(nextAddedEdge.getFirstVertex(), true);
 				used.put(nextAddedEdge.getSecondVertex(), true);
 				outputListEdges.addLast(nextAddedEdge);
+				GraphMask mask = new GraphMask(graph);
+				visualizer.addMask(mask);
+				adjMask.addEdge(nextAddedEdge);
+				mask.applyMask(adjMask.clone());
+				visualizer.applyLastMask();
 				nextAddedEdge = null;
 			}
 			
@@ -88,6 +103,7 @@ public class MSTPrim extends Algorithm {
 		System.out.println(sum);
 		
 		System.out.println();
+		finished();
 		
 	}
 	
@@ -96,18 +112,6 @@ public class MSTPrim extends Algorithm {
 			if(!used.get(vertex)) return false;
 		}
 		return true;
-	}
-	
-	private Vertex getStartingVertex() {
-		ChoiceDialog<Vertex> choiceDialog = new ChoiceDialog<Vertex>(graph.getVerticies().getFirst(), graph.getVerticies());
-		choiceDialog.setHeaderText(null);
-		choiceDialog.setContentText("Select starting vertex:");
-		Optional<Vertex> opt = choiceDialog.showAndWait();
-		if(opt.isPresent()) {
-			return opt.get();
-		} else {
-			return null;
-		}
 	}
 
 }

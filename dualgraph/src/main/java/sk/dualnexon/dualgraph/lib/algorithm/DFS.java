@@ -2,20 +2,29 @@ package sk.dualnexon.dualgraph.lib.algorithm;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Optional;
 
-import javafx.scene.control.ChoiceDialog;
+import sk.dualnexon.dualgraph.lib.AdjacencyList;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.NoVerticiesException;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
+import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
 
 public class DFS extends Algorithm {
 	
+	private AdjacencyList adjMask;
+	
 	public DFS(Graph graph) {
 		super(graph);
+		adjMask = new AdjacencyList();
 	}
 	
-	public void calculate() {
+	public void calculate() throws AlgorithmException {
+		
+		if(graph.getVerticies().size() == 0) {
+			throw new NoVerticiesException(this);
+		}
 		
 		Vertex s = getStartingVertex();
 		
@@ -30,6 +39,7 @@ public class DFS extends Algorithm {
         
         recursive(s, visited);
         System.out.println();
+        finished();
 		
 	}
 	
@@ -37,6 +47,11 @@ public class DFS extends Algorithm {
 		
 		visited.put(v, true);
         System.out.print(v.getNamespace().getText() + " ");
+        GraphMask mask = new GraphMask(graph);
+		visualizer.addMask(mask);
+		adjMask.addVertex(v);
+		mask.applyMask(adjMask.clone());
+		visualizer.applyLastMask();
  
         Iterator<Vertex> i = graph.getAdjacencyList().getVertexList(v).keySet().iterator();
         while(i.hasNext()) {
@@ -46,18 +61,6 @@ public class DFS extends Algorithm {
             }
         }
 		
-	}
-	
-	private Vertex getStartingVertex() {
-		ChoiceDialog<Vertex> choiceDialog = new ChoiceDialog<Vertex>(graph.getVerticies().getFirst(), graph.getVerticies());
-		choiceDialog.setHeaderText(null);
-		choiceDialog.setContentText("Select starting vertex:");
-		Optional<Vertex> opt = choiceDialog.showAndWait();
-		if(opt.isPresent()) {
-			return opt.get();
-		} else {
-			return null;
-		}
 	}
 	
 }

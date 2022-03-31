@@ -7,18 +7,24 @@ import sk.dualnexon.dualgraph.lib.AdjacencyList;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
+import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
 
 public class BridgeDetection extends Algorithm {
 	
 	private AdjacencyList adj;
+	private AdjacencyList adjMask;
 	private int time = 0;
 	
 	public BridgeDetection(Graph graph) {
 		super(graph);
 		adj = graph.getAdjacencyList();
+		adjMask = new AdjacencyList();
 	}
 	
 	public void calculate() {
+		
+		GraphMask mask = new GraphMask(graph);
+		visualizer.addMask(mask);
 		
 		HashMap<Vertex, Boolean> visited = new HashMap<>();
 		HashMap<Vertex, Integer> disc = new HashMap<Vertex, Integer>();
@@ -34,6 +40,11 @@ public class BridgeDetection extends Algorithm {
 				recursive(vertex, visited, disc, low, parent);
 			}
 		}
+		
+		mask.applyMask(adjMask.clone());
+		visualizer.applyLastMask();
+		
+		finished();
 				
 	}
 
@@ -59,12 +70,13 @@ public class BridgeDetection extends Algorithm {
 
 				// If the lowest vertex reachable from subtree under v is below u in DFS tree, then u-v is a bridge
 				if(low.get(adjacentVertex) > disc.get(vertex)) {
-					System.out.println(vertex.getNamespace().getText() + " " + adjacentVertex.getNamespace().getText());
+					adjMask.addEdge(graph.getEdgeByEndPoints(vertex, adjacentVertex));
 				}
 			} else if(!adjacentVertex.equals(parent.get(vertex))) { // Update low value of u for parent function calls.
 				low.put(vertex, Math.min(low.get(vertex), disc.get(adjacentVertex)));
 			}
 		}
+		
 	}
 
 }

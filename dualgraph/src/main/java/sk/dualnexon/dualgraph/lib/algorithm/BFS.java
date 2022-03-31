@@ -3,20 +3,29 @@ package sk.dualnexon.dualgraph.lib.algorithm;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Optional;
 
-import javafx.scene.control.ChoiceDialog;
+import sk.dualnexon.dualgraph.lib.AdjacencyList;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.NoVerticiesException;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
+import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
 
 public class BFS extends Algorithm {
 	
+	private AdjacencyList adjMask;
+	
 	public BFS(Graph graph) {
 		super(graph);
+		adjMask = new AdjacencyList();
 	}
 	
-	public void calculate() {
+	public void calculate() throws AlgorithmException {
+		
+		if(graph.getVerticies().size() == 0) {
+			throw new NoVerticiesException(this);
+		}
 		
 		Vertex s = getStartingVertex();
 		
@@ -34,10 +43,15 @@ public class BFS extends Algorithm {
         visited.put(s, true);
         queue.add(s);
  
-        while (queue.size() != 0) {
+        while(queue.size() != 0) {
         	
             s = queue.poll();
             System.out.print(s.getNamespace().getText() + " ");
+            GraphMask mask = new GraphMask(graph);
+			visualizer.addMask(mask);
+			adjMask.addVertex(s);
+			mask.applyMask(adjMask.clone());
+			visualizer.applyLastMask();
  
             Iterator<Vertex> i = graph.getAdjacencyList().getVertexList(s).keySet().iterator();
             while(i.hasNext()) {
@@ -51,18 +65,7 @@ public class BFS extends Algorithm {
         
         System.out.println();
 		
-	}
-	
-	private Vertex getStartingVertex() {
-		ChoiceDialog<Vertex> choiceDialog = new ChoiceDialog<Vertex>(graph.getVerticies().getFirst(), graph.getVerticies());
-		choiceDialog.setHeaderText(null);
-		choiceDialog.setContentText("Select starting vertex:");
-		Optional<Vertex> opt = choiceDialog.showAndWait();
-		if(opt.isPresent()) {
-			return opt.get();
-		} else {
-			return null;
-		}
+        finished();
 	}
 	
 }

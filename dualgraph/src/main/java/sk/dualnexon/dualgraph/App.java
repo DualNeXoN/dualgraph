@@ -21,7 +21,8 @@ import sk.dualnexon.dualgraph.lib.algorithm.BFS;
 import sk.dualnexon.dualgraph.lib.algorithm.BridgeDetection;
 import sk.dualnexon.dualgraph.lib.algorithm.CycleDetection;
 import sk.dualnexon.dualgraph.lib.algorithm.DFS;
-import sk.dualnexon.dualgraph.lib.algorithm.MSTPrim;
+import sk.dualnexon.dualgraph.lib.algorithm.MinSpanningTreePrim;
+import sk.dualnexon.dualgraph.lib.algorithm.MaxSpanningTreePrim;
 import sk.dualnexon.dualgraph.util.FileHandler;
 import sk.dualnexon.dualgraph.window.Window;
 import sk.dualnexon.dualgraph.window.Workspace;
@@ -29,6 +30,7 @@ import sk.dualnexon.dualgraph.window.Workspace;
 public class App extends Application {
 	
 	private static final String MSG_NO_WORKSPACE = "No workspace has been chosen";
+	private static final String DEFAULT_WORKSPACE_NAME = "Workspace";
 	
 	private static App instance;
 	
@@ -51,7 +53,7 @@ public class App extends Application {
     	
     	MenuItem menuItemNew = new MenuItem("New...");
     	menuItemNew.setOnAction(e -> {
-    		tabPane.getTabs().add(new Workspace("Workspace"));
+    		tabPane.getTabs().add(new Workspace(DEFAULT_WORKSPACE_NAME));
     	});
     	MenuItem menuItemOpen = new MenuItem("Open...");
     	menuItemOpen.setOnAction(e -> {
@@ -66,7 +68,7 @@ public class App extends Application {
     	menuAlgorithmBFS.setOnAction(e -> {
     		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
     		if(currentWorkspace != null) {
-    			new BFS(currentWorkspace.getGraph()).calculate();
+    			currentWorkspace.applyAlgorithm(new BFS(currentWorkspace.getGraph()));
     		} else {
     			showWarningAlert(MSG_NO_WORKSPACE);
     		}
@@ -75,7 +77,7 @@ public class App extends Application {
     	menuAlgorithmDFS.setOnAction(e -> {
     		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
     		if(currentWorkspace != null) {
-    			new DFS(currentWorkspace.getGraph()).calculate();
+    			currentWorkspace.applyAlgorithm(new DFS(currentWorkspace.getGraph()));
     		} else {
     			showWarningAlert(MSG_NO_WORKSPACE);
     		}
@@ -84,7 +86,7 @@ public class App extends Application {
     	menuAlgorithmBridgeDetection.setOnAction(e -> {
     		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
     		if(currentWorkspace != null) {
-    			new BridgeDetection(currentWorkspace.getGraph()).calculate();
+    			currentWorkspace.applyAlgorithm(new BridgeDetection(currentWorkspace.getGraph()));
     		} else {
     			showWarningAlert(MSG_NO_WORKSPACE);
     		}
@@ -93,7 +95,7 @@ public class App extends Application {
     	menuAlgorithmCycleDetection.setOnAction(e -> {
     		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
     		if(currentWorkspace != null) {
-    			System.out.println(new CycleDetection(currentWorkspace.getGraph()).calculate());
+    			currentWorkspace.applyAlgorithm(new CycleDetection(currentWorkspace.getGraph()));
     		} else {
     			showWarningAlert(MSG_NO_WORKSPACE);
     		}
@@ -102,13 +104,22 @@ public class App extends Application {
     	menuAlgorithmPrimMST.setOnAction(e -> {
     		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
     		if(currentWorkspace != null) {
-    			new MSTPrim(currentWorkspace.getGraph()).calculate();
+    			currentWorkspace.applyAlgorithm(new MinSpanningTreePrim(currentWorkspace.getGraph()));
+    		} else {
+    			showWarningAlert(MSG_NO_WORKSPACE);
+    		}
+    	});
+    	MenuItem menuAlgorithmPrimMaxSpanningTree = new MenuItem("Maximal Spanning Tree - Prim");
+    	menuAlgorithmPrimMaxSpanningTree.setOnAction(e -> {
+    		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
+    		if(currentWorkspace != null) {
+    			currentWorkspace.applyAlgorithm(new MaxSpanningTreePrim(currentWorkspace.getGraph()));
     		} else {
     			showWarningAlert(MSG_NO_WORKSPACE);
     		}
     	});
     	
-    	menuAlgorithm.getItems().addAll(menuAlgorithmBFS, menuAlgorithmDFS, menuAlgorithmBridgeDetection, menuAlgorithmCycleDetection, menuAlgorithmPrimMST);
+    	menuAlgorithm.getItems().addAll(menuAlgorithmBFS, menuAlgorithmDFS, menuAlgorithmBridgeDetection, menuAlgorithmCycleDetection, menuAlgorithmPrimMST, menuAlgorithmPrimMaxSpanningTree);
     	menuBar.getMenus().addAll(menuFile, menuAlgorithm);
         VBox menuBox = new VBox(menuBar);
     	
@@ -121,8 +132,6 @@ public class App extends Application {
     	scene = new Scene(sceneItems);
     	baseWindow.setScene(scene);
     	
-    	tabPane.getTabs().addAll(new Workspace("Workspace1"));
-    	
     	Timeline delayedUpdateOnCreate = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -134,7 +143,9 @@ public class App extends Application {
     	scene.setOnKeyPressed(e -> {
 	    	switch(e.getCode()) {
 	    	case F3:
-	    		((Workspace) tabPane.getSelectionModel().getSelectedItem()).toggleDebugMonitor();
+	    		Workspace currentWorkspace = ((Workspace) tabPane.getSelectionModel().getSelectedItem());
+	    		if(currentWorkspace == null) break;
+	    		currentWorkspace.toggleDebugMonitor();
 	    		break;
 	    	default:
 	    		break;
@@ -154,7 +165,7 @@ public class App extends Application {
 		return tabPane;
 	}
     
-    private void showWarningAlert(String titleMessage) {
+    public void showWarningAlert(String titleMessage) {
     	Alert alert = new Alert(AlertType.WARNING);
     	alert.setHeaderText(titleMessage);
     	alert.show();

@@ -18,6 +18,7 @@ public class Edge extends BaseGraphNode {
 	
 	private static final int DEFAULT_VALUE = 1;
 	private static final DirectionType DEFAULT_DIRECTION = DirectionType.BIDIRECTIONAL;
+	private static final Color DEFAULT_COLOR = Color.BLACK;
 	
 	public enum DirectionType {
 		UNIDIRECTIONAL, BIDIRECTIONAL;
@@ -28,6 +29,7 @@ public class Edge extends BaseGraphNode {
 	private int value;
 	private DirectionType direction;
 	private Vertex vertexDirection = null;
+	private Color color = DEFAULT_COLOR;
 	
 	private Namespace namespace;
 	
@@ -120,10 +122,12 @@ public class Edge extends BaseGraphNode {
 	private void events() {
 		
 		node.setOnContextMenuRequested((e) -> {
+			if(graph.isLocked()) return;
 			contextMenu.show(node, e.getScreenX(), e.getScreenY());
 		});
 		
 		node.setOnMouseReleased((e) -> {
+			if(graph.isLocked()) return;
 			if(e.isShiftDown()) {
 				toggleSelected();
 				graph.update();
@@ -152,6 +156,7 @@ public class Edge extends BaseGraphNode {
 	}
 	
 	public void setValue(int value) {
+		if(graph.isLocked()) return;
 		this.value = value;
 		String newValueString = "";
 		if(value == (long) value) newValueString = String.format("%d",(long) value);
@@ -169,11 +174,13 @@ public class Edge extends BaseGraphNode {
 	}
 	
 	public void setDirection(DirectionType direction) {
+		if(graph.isLocked()) return;
 		this.direction = direction;
 		applyDirectionChanges();
 	}
 	
 	public void toggleDirectionMode() {
+		if(graph.isLocked()) return;
 		setDirection(isDirected() ? DirectionType.BIDIRECTIONAL : DirectionType.UNIDIRECTIONAL);
 	}
 	
@@ -182,6 +189,7 @@ public class Edge extends BaseGraphNode {
 	}
 	
 	public void toggleVertexDirection() {
+		if(graph.isLocked()) return;
 		vertexDirection = (vertexDirection.equals(secondVertex) ? firstVertex : secondVertex);
 		graph.update();
 	}
@@ -196,6 +204,7 @@ public class Edge extends BaseGraphNode {
 	}
 	
 	private void applyDirectionChanges() {
+		if(graph.isLocked()) return;
 		switch(direction) {
 		
 		case UNIDIRECTIONAL:
@@ -211,12 +220,20 @@ public class Edge extends BaseGraphNode {
 			
 		case BIDIRECTIONAL:
 			
-			if(arrow != null) {
-				arrow.destroy();
-				arrow = null;
-			}
+			if(arrow == null) break;
+			arrow.destroy();
+			arrow = null;
+			
 			break;
 		}
+	}
+	
+	public void setColor(Color color) {
+		this.color = (color != null ? color : DEFAULT_COLOR);
+	}
+	
+	public Color getColor() {
+		return color;
 	}
 	
 	public Line getNode() {
@@ -258,7 +275,7 @@ public class Edge extends BaseGraphNode {
 		node.setEndX(v2X + -graph.getWorkspace().getOffsetX());
 		node.setEndY(v2Y + -graph.getWorkspace().getOffsetY());
 		
-		node.setStroke((isSelected() ? Color.RED : Color.BLACK));
+		node.setStroke((isSelected() ? Color.RED : color));
 		node.setStrokeWidth(5);
 		
 		node.toFront();
@@ -293,6 +310,7 @@ public class Edge extends BaseGraphNode {
 			contextMenu.getItems().addAll(swapDirectionItem);
 			
 			setOnContextMenuRequested((e) -> {
+				if(graph.isLocked()) return;
 				contextMenu.show(node, e.getScreenX(), e.getScreenY());
 			});
 			
