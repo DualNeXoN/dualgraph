@@ -45,8 +45,8 @@ public class FileHandler {
 		joWorkspace.put("offsetX", workspace.getOffsetX() * -1);
 		joWorkspace.put("offsetY", workspace.getOffsetY() * -1);
 		
-		JSONArray verticies = new JSONArray();
-		for(Vertex vertex : workspace.getGraph().getVerticies()) {
+		JSONArray vertices = new JSONArray();
+		for(Vertex vertex : workspace.getGraph().getVertices()) {
 			JSONObject obj = new JSONObject();
 			obj.put("uuid", vertex.getUUID());
 			obj.put("positionX", vertex.getPositionX());
@@ -54,9 +54,9 @@ public class FileHandler {
 			obj.put("namespaceText", vertex.getNamespace().getText());
 			obj.put("namespaceOffsetX", vertex.getNamespace().getOffsetX());
 			obj.put("namespaceOffsetY", vertex.getNamespace().getOffsetY());
-			verticies.put(obj);
+			vertices.put(obj);
 		}
-		joWorkspace.put("verticies", verticies);
+		joWorkspace.put("vertices", vertices);
 		
 		JSONArray edges = new JSONArray();
 		for(Edge edge : workspace.getGraph().getEdges()) {
@@ -104,9 +104,9 @@ public class FileHandler {
 			w.setOffsetX(objWorkspace.getDouble("offsetX"));
 			w.setOffsetY(objWorkspace.getDouble("offsetY"));
 			
-			JSONArray verticies = objWorkspace.getJSONArray("verticies");
-	        for (int i = 0; i < verticies.length(); i++) {
-	        	JSONObject obj = verticies.getJSONObject(i);
+			JSONArray vertices = objWorkspace.getJSONArray("vertices");
+	        for (int i = 0; i < vertices.length(); i++) {
+	        	JSONObject obj = vertices.getJSONObject(i);
 	        	String uuid = obj.getString("uuid");
 	        	double positionX = obj.getDouble("positionX");
 	        	double positionY = obj.getDouble("positionY");
@@ -143,7 +143,7 @@ public class FileHandler {
 	}
 	
 	private Vertex getVertexByUUID(Workspace workspace, String uuid) {
-		for(Vertex vertex : workspace.getGraph().getVerticies()) {
+		for(Vertex vertex : workspace.getGraph().getVertices()) {
 			if(vertex.getUUID().equals(uuid)) return vertex;
 		}
 		return null;

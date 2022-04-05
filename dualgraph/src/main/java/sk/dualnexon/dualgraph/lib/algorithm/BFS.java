@@ -8,7 +8,7 @@ import sk.dualnexon.dualgraph.lib.AdjacencyList;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
-import sk.dualnexon.dualgraph.lib.algorithm.exception.NoVerticiesException;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.NoVerticesException;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
 import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
 
@@ -23,8 +23,8 @@ public class BFS extends Algorithm {
 	
 	public void calculate() throws AlgorithmException {
 		
-		if(graph.getVerticies().size() == 0) {
-			throw new NoVerticiesException(this);
+		if(graph.getVertices().size() == 0) {
+			throw new NoVerticesException(this);
 		}
 		
 		Vertex s = getStartingVertex();
@@ -34,7 +34,7 @@ public class BFS extends Algorithm {
 		}
 		
         HashMap<Vertex, Boolean> visited = new HashMap<>();
-        for(Vertex v : graph.getVerticies()) {
+        for(Vertex v : graph.getVertices()) {
         	visited.put(v, false);
         }
  

@@ -8,7 +8,7 @@ import sk.dualnexon.dualgraph.lib.Edge;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
-import sk.dualnexon.dualgraph.lib.algorithm.exception.NoVerticiesException;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.NoVerticesException;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.UnsupportedGraphException;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
 import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
@@ -26,8 +26,8 @@ public class MaxSpanningTreePrim extends Algorithm {
 
 	public void calculate() throws AlgorithmException {
 		
-		if(graph.getVerticies().size() == 0) {
-			throw new NoVerticiesException(this);
+		if(graph.getVertices().size() == 0) {
+			throw new NoVerticesException(this);
 		}
 		
 		Vertex startVertex = getStartingVertex();
@@ -36,9 +36,9 @@ public class MaxSpanningTreePrim extends Algorithm {
 			return;
 		}
 		
-		// Map of used verticies
+		// Map of used vertices
 		HashMap<Vertex, Boolean> used = new HashMap<>();
-		for(Vertex vertex : graph.getVerticies()) {
+		for(Vertex vertex : graph.getVertices()) {
 			used.put(vertex, false);
 		}
 		used.put(startVertex, true);

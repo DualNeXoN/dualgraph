@@ -30,7 +30,7 @@ public class GraphMask implements Destroyable {
 	public void applyMask(AdjacencyList mask) {
 		this.mask = mask;
 		
-		for(Vertex vertexRoot : mask.getRootVerticies()) {
+		for(Vertex vertexRoot : mask.getRootVertices()) {
 			vertexRoot.setColor(DEFAULT_COLOR);
 			for(Vertex vertexAdj : mask.getVertexList(vertexRoot).keySet()) {
 				vertexAdj.setColor(DEFAULT_COLOR);
@@ -42,7 +42,7 @@ public class GraphMask implements Destroyable {
 	}
 	
 	public void resetMask() {
-		for(Vertex vertex : graph.getVerticies()) {
+		for(Vertex vertex : graph.getVertices()) {
 			vertex.setColor(null);
 		}
 		for(Edge edge : graph.getEdges()) {

@@ -10,7 +10,7 @@ public class Graph implements Updatable {
 	private static final int ZOOM_FACTOR = 2;
 	
 	private Workspace workspace;
-	private LinkedList<Vertex> verticies;
+	private LinkedList<Vertex> vertices;
 	private LinkedList<Edge> edges;
 	
 	private Vertex startingVertex, endingVertex;
@@ -19,12 +19,12 @@ public class Graph implements Updatable {
 	
 	public Graph(Workspace workspace) {
 		this.workspace = workspace;
-		verticies = new LinkedList<>();
+		vertices = new LinkedList<>();
 		edges = new LinkedList<>();
 	}
 	
 	public void addVertex(Vertex vertex) {
-		verticies.add(vertex);
+		vertices.add(vertex);
 		workspace.addNode(vertex.getNode());
 		update();
 	}
@@ -32,7 +32,7 @@ public class Graph implements Updatable {
 	public void removeVertex(Vertex vertex) {
 		if(startingVertex != null && startingVertex.equals(vertex)) startingVertex = null;
 		else if(endingVertex != null && endingVertex.equals(vertex)) endingVertex = null;
-		verticies.remove(vertex);
+		vertices.remove(vertex);
 		
 		for(int index = edges.size()-1; index >= 0; index--) {
 			Edge edge = edges.get(index);
@@ -81,14 +81,14 @@ public class Graph implements Updatable {
 	}
 	
 	private void removeAllSelected() {
-		LinkedList<Vertex> selectedVerticies = getSelectedVerticies();
-		if(selectedVerticies.size() > 0) selectedVerticies.get(0).destroy();
+		LinkedList<Vertex> selectedVertices = getSelectedVertices();
+		if(selectedVertices.size() > 0) selectedVertices.get(0).destroy();
 		LinkedList<Edge> selectedEdges = getSelectedEdges();
 		if(selectedEdges.size() > 0) selectedEdges.get(0).destroy();
 	}
 	
-	public LinkedList<Vertex> getVerticies() {
-		return verticies;
+	public LinkedList<Vertex> getVertices() {
+		return vertices;
 	}
 	
 	public LinkedList<Edge> getEdges() {
@@ -115,10 +115,10 @@ public class Graph implements Updatable {
 		return workspace;
 	}
 	
-	public LinkedList<Vertex> getSelectedVerticies() {
+	public LinkedList<Vertex> getSelectedVertices() {
 		LinkedList<Vertex> list = new LinkedList<>();
 		
-		for(Vertex vertex : verticies) {
+		for(Vertex vertex : vertices) {
 			if(vertex.isSelected()) list.add(vertex);
 		}
 		
@@ -136,13 +136,13 @@ public class Graph implements Updatable {
 	}
 	
 	public void zoomIn() {
-		for(Vertex vertex : verticies) {
+		for(Vertex vertex : vertices) {
 			vertex.setSize(vertex.getSize()+ZOOM_FACTOR);
 		}
 	}
 	
 	public void zoomOut() {
-		for(Vertex vertex : verticies) {
+		for(Vertex vertex : vertices) {
 			vertex.setSize(vertex.getSize()-ZOOM_FACTOR);
 		}
 	}
@@ -156,7 +156,7 @@ public class Graph implements Updatable {
 	}
 	
 	public void unselectAll() {
-		for(BaseGraphNode graphNode : verticies) {
+		for(BaseGraphNode graphNode : vertices) {
 			if(graphNode.isSelected()) graphNode.toggleSelected();
 		}
 		for(BaseGraphNode graphNode : edges) {
@@ -167,7 +167,7 @@ public class Graph implements Updatable {
 	public AdjacencyList getAdjacencyList() {
 		AdjacencyList adj = new AdjacencyList();
 		
-		for(Vertex v : verticies) {
+		for(Vertex v : vertices) {
 			adj.addVertex(v);
 		}
 		
@@ -183,8 +183,8 @@ public class Graph implements Updatable {
 		for(int index = edges.size()-1; index >= 0; index--) {
 			edges.get(index).destroy();
 		}
-		for(int index = verticies.size()-1; index >= 0; index--) {
-			verticies.get(index).destroy();
+		for(int index = vertices.size()-1; index >= 0; index--) {
+			vertices.get(index).destroy();
 		}
 	}
 
@@ -192,7 +192,7 @@ public class Graph implements Updatable {
 	public void update() {
 		workspace.getGrid().update();
 		for(Edge edge : edges) edge.update();
-		for(Vertex vertex : verticies) vertex.update();
+		for(Vertex vertex : vertices) vertex.update();
 	}
 	
 }

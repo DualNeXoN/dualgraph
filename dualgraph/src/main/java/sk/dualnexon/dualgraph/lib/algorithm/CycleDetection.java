@@ -15,16 +15,16 @@ public class CycleDetection extends Algorithm {
 	public void calculate() {
 
 		HashMap<Vertex, Boolean> visited = new HashMap<>();
-		for(Vertex v : graph.getVerticies()) {
+		for(Vertex v : graph.getVertices()) {
 			visited.put(v, false);
 		}
 
 		HashMap<Vertex, Boolean> recStack = new HashMap<>();
-		for(Vertex v : graph.getVerticies()) {
+		for(Vertex v : graph.getVertices()) {
 			recStack.put(v, false);
 		}
 
-		for(Vertex v : graph.getVerticies()) {
+		for(Vertex v : graph.getVertices()) {
 			System.out.println("Z vrcholu " + v.getNamespace().getText() + " je cyklický? " + recursive(v, visited, recStack)); //TODO neskor bude doplnena konzola do appky
 		}
 		

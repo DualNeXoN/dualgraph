@@ -65,7 +65,7 @@ public class AdjacencyList {
 		if(temp != null) temp.remove(edge.getFirstVertex());
 	}
 	
-	public Set<Vertex> getRootVerticies() {
+	public Set<Vertex> getRootVertices() {
 		return list.keySet();
 	}
 	

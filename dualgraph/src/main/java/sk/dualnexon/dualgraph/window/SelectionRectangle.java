@@ -71,7 +71,7 @@ public class SelectionRectangle extends Canvas implements Updatable {
 			bottomRightY = startPositionY;
 		}
 		
-		for(Vertex vertex : workspace.getGraph().getVerticies()) {
+		for(Vertex vertex : workspace.getGraph().getVertices()) {
 			if(isInRect(vertex.getPositionX(), vertex.getPositionY(), topLeftX, topLeftY, bottomRightX, bottomRightY)) vertex.select();
 		}
 		

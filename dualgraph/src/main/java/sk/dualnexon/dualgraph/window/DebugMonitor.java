@@ -19,19 +19,19 @@ public class DebugMonitor implements Updatable {
 	private Timeline updateTask;
 	
 	private VBox container;
-	private Text countOfVerticies, countOfEdges;
-	private Text listOfVerticies, listOfEdges;
+	private Text countOfVertices, countOfEdges;
+	private Text listOfVertices, listOfEdges;
 	
 	public DebugMonitor(Workspace workspace) {
 		
 		this.workspace = workspace;
 		
 		container = new VBox();
-		countOfVerticies = new Text();
-		listOfVerticies = new Text();
+		countOfVertices = new Text();
+		listOfVertices = new Text();
 		countOfEdges = new Text();
 		listOfEdges = new Text();
-		container.getChildren().addAll(countOfVerticies, listOfVerticies, countOfEdges, listOfEdges);
+		container.getChildren().addAll(countOfVertices, listOfVertices, countOfEdges, listOfEdges);
 		workspace.addNode(container);
 		
 		updateTask = new Timeline(new KeyFrame(Duration.millis(200), new EventHandler<ActionEvent>() {
@@ -85,17 +85,17 @@ public class DebugMonitor implements Updatable {
 		
 		if(!isVisible()) return;
 		
-		countOfVerticies.setText("Verticies count: " + workspace.getGraph().getVerticies().size());
+		countOfVertices.setText("Vertices count: " + workspace.getGraph().getVertices().size());
 		countOfEdges.setText("Edges count: " + workspace.getGraph().getEdges().size());
 		
-		String listOfVerticiesString = "";
-		for(Vertex vertex : workspace.getGraph().getVerticies()) {
-			listOfVerticiesString += vertex.getNamespace().getText() + ", ";
+		String listOfVerticesString = "";
+		for(Vertex vertex : workspace.getGraph().getVertices()) {
+			listOfVerticesString += vertex.getNamespace().getText() + ", ";
 		}
-		if(listOfVerticiesString.length() > 0) {
-			listOfVerticies.setText("Verticies: " + listOfVerticiesString.substring(0, listOfVerticiesString.length() - 2));
+		if(listOfVerticesString.length() > 0) {
+			listOfVertices.setText("Vertices: " + listOfVerticesString.substring(0, listOfVerticesString.length() - 2));
 		} else {
-			listOfVerticies.setText("No verticies in list");
+			listOfVertices.setText("No vertices in list");
 		}
 		
 		String listOfEdgesString = "";

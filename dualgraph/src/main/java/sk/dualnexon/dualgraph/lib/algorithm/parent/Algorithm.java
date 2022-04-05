@@ -43,7 +43,7 @@ public abstract class Algorithm implements Destroyable {
 	}
 	
 	protected Vertex getStartingVertex() {
-		ChoiceDialog<Vertex> choiceDialog = new ChoiceDialog<Vertex>(graph.getVerticies().getFirst(), graph.getVerticies());
+		ChoiceDialog<Vertex> choiceDialog = new ChoiceDialog<Vertex>(graph.getVertices().getFirst(), graph.getVertices());
 		choiceDialog.setHeaderText(null);
 		choiceDialog.setContentText("Select starting vertex:");
 		Optional<Vertex> opt = choiceDialog.showAndWait();

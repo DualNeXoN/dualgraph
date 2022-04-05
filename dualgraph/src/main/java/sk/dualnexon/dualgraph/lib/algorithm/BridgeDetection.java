@@ -31,11 +31,11 @@ public class BridgeDetection extends Algorithm {
 		HashMap<Vertex, Integer> low = new HashMap<Vertex, Integer>();
 		HashMap<Vertex, Vertex> parent = new HashMap<Vertex, Vertex>();
 		
-		for(Vertex vertex : graph.getVerticies()) {
+		for(Vertex vertex : graph.getVertices()) {
 			visited.put(vertex, false);
 		}
 		
-		for(Vertex vertex : graph.getVerticies()) {
+		for(Vertex vertex : graph.getVertices()) {
 			if(!visited.get(vertex)) {
 				recursive(vertex, visited, disc, low, parent);
 			}
