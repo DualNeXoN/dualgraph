@@ -59,8 +59,17 @@ public class App extends Application {
     	menuItemOpen.setOnAction(e -> {
     		FileHandler.get().load();
     	});
+    	MenuItem menuItemSave = new MenuItem("Save...");
+    	menuItemSave.setOnAction(e -> {
+    		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
+    		if(currentWorkspace != null) {
+    			FileHandler.get().save(currentWorkspace);
+    		} else {
+    			showWarningAlert(MSG_NO_WORKSPACE);
+    		}
+    	});
     	
-    	menuFile.getItems().addAll(menuItemNew, menuItemOpen);
+    	menuFile.getItems().addAll(menuItemNew, menuItemOpen, menuItemSave);
     	
     	Menu menuAlgorithm = new Menu("Algorithm");
     	

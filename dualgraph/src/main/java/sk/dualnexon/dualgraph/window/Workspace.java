@@ -56,6 +56,7 @@ public class Workspace extends Tab implements Updatable {
 		
 		getContent().setOnMouseClicked(e -> {
 			if(e.isControlDown()) {
+				if(graph.isLocked()) return;
 				double x = e.getX();
 				double y = e.getY();
 				graph.addVertex(new Vertex(graph, x + offsetX, y + offsetY));
