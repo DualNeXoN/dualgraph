@@ -15,6 +15,10 @@ public class AdjacencyList {
 		return list.containsKey(vertex) ? list.get(vertex) : list.put(vertex, new HashMap<>());
 	}
 	
+	public void addVertices(Vertex... vertices) {
+		for(Vertex vertex : vertices) list.put(vertex, new HashMap<>());
+	}
+	
 	public void removeVertex(Vertex vertex) {
 		list.remove(vertex);
 	}

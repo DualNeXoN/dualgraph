@@ -35,8 +35,12 @@ public class Grid extends Canvas implements Updatable {
 	@Override
 	public void update() {
 		
-		setWidth(App.get().getScene().getWidth());
-		setHeight(App.get().getScene().getHeight());
+		try {
+			setWidth(App.get().getScene().getWidth());
+			setHeight(App.get().getScene().getHeight());
+		} catch(Exception e) {
+			
+		}
 		
 		g2d.clearRect(0, 0, getWidth(), getHeight());
 		

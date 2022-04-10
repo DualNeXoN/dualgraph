@@ -17,6 +17,8 @@ public class MinSpanningTreePrim extends Algorithm {
 	
 	private AdjacencyList adj;
 	private AdjacencyList adjMask;
+	private Vertex startVertex = null;
+	private int sum = -1;
 	
 	public MinSpanningTreePrim(Graph graph) {
 		super(graph);
@@ -30,10 +32,11 @@ public class MinSpanningTreePrim extends Algorithm {
 			throw new NoVerticesException(this);
 		}
 		
-		Vertex startVertex = getStartingVertex();
-		
 		if(startVertex == null) {
-			return;
+			startVertex = getStartingVertex();
+			if(startVertex == null) {
+				return;
+			}
 		}
 		
 		// Map of used vertices
@@ -95,7 +98,7 @@ public class MinSpanningTreePrim extends Algorithm {
 			
 		}
 		
-		int sum = 0;
+		sum = 0;
 		for(Edge edge : outputListEdges) {
 			System.out.println(edge.getFirstVertex().getNamespace().getText() + "-" + edge.getSecondVertex().getNamespace().getText());
 			sum += edge.getValue();
@@ -112,6 +115,14 @@ public class MinSpanningTreePrim extends Algorithm {
 			if(!used.get(vertex)) return false;
 		}
 		return true;
+	}
+	
+	public void setStartVertex(Vertex startVertex) {
+		this.startVertex = startVertex;
+	}
+	
+	public int getValueOfSpanningTree() {
+		return sum;
 	}
 
 }

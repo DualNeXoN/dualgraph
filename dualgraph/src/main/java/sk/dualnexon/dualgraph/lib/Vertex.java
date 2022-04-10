@@ -56,6 +56,14 @@ public class Vertex extends BaseGraphNode {
 		this(graph, positionX, positionY, DEFAULT_SIZE);
 	}
 	
+	public Vertex(double positionX, double positionY) {
+		this(null, positionX, positionY, DEFAULT_SIZE);
+	}
+	
+	public Vertex() {
+		this(null, 0, 0, DEFAULT_SIZE);
+	}
+	
 	private void contextMenuCreation() {
 		
 		Vertex thisObjHelper = this;

@@ -29,6 +29,14 @@ public class Graph implements Updatable {
 		update();
 	}
 	
+	public void addVertices(Vertex... vertices) {
+		for(Vertex vertex : vertices) {
+			this.vertices.add(vertex);
+			workspace.addNode(vertex.getNode());
+		}
+		update();
+	}
+	
 	public void removeVertex(Vertex vertex) {
 		if(startingVertex != null && startingVertex.equals(vertex)) startingVertex = null;
 		else if(endingVertex != null && endingVertex.equals(vertex)) endingVertex = null;

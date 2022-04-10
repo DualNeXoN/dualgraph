@@ -131,21 +131,26 @@ public class Workspace extends Tab implements Updatable {
 		ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> {
 			update();
 		};
-	    App.get().getBaseWindow().widthProperty().addListener(stageSizeListener);
-	    App.get().getBaseWindow().heightProperty().addListener(stageSizeListener);
-	    
-	    App.get().getBaseWindow().maximizedProperty().addListener(new ChangeListener<Boolean>() {
-	        @Override
-	        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-	        	Timeline delayer = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
-	        		@Override
-	    			public void handle(ActionEvent event) {
-	        			update();
-	    			}
-	        	}));
-	        	delayer.play();
-	        }
-	    });
+		
+		try {
+			App.get().getBaseWindow().widthProperty().addListener(stageSizeListener);
+		    App.get().getBaseWindow().heightProperty().addListener(stageSizeListener);
+		    
+		    App.get().getBaseWindow().maximizedProperty().addListener(new ChangeListener<Boolean>() {
+		        @Override
+		        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		        	Timeline delayer = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
+		        		@Override
+		    			public void handle(ActionEvent event) {
+		        			update();
+		    			}
+		        	}));
+		        	delayer.play();
+		        }
+		    });
+		} catch(Exception e) {
+			
+		}
 		
 	}
 	
