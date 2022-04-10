@@ -14,6 +14,8 @@ import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
 public class DFS extends Algorithm {
 	
 	private AdjacencyList adjMask;
+	private Vertex startVertex = null;
+	private int countOfDiscoveredVertices = -1;
 	
 	public DFS(Graph graph) {
 		super(graph);
@@ -22,14 +24,17 @@ public class DFS extends Algorithm {
 	
 	public void calculate() throws AlgorithmException {
 		
+		countOfDiscoveredVertices = 0;
+		
 		if(graph.getVertices().size() == 0) {
 			throw new NoVerticesException(this);
 		}
 		
-		Vertex s = getStartingVertex();
-		
-		if(s == null) {
-			return;
+		if(startVertex == null) {
+			startVertex = getStartingVertex();
+			if(startVertex == null) {
+				return;
+			}
 		}
 		
 		HashMap<Vertex, Boolean> visited = new HashMap<>();
@@ -37,14 +42,14 @@ public class DFS extends Algorithm {
         	visited.put(v, false);
         }
         
-        recursive(s, visited);
+        recursive(startVertex, visited);
         System.out.println();
         finished();
 		
 	}
 	
 	private void recursive(Vertex v, HashMap<Vertex, Boolean> visited) {
-		
+		countOfDiscoveredVertices++;
 		visited.put(v, true);
         System.out.print(v.getNamespace().getText() + " ");
         GraphMask mask = new GraphMask(graph);
@@ -61,6 +66,14 @@ public class DFS extends Algorithm {
             }
         }
 		
+	}
+	
+	public void setStartVertex(Vertex startVertex) {
+		this.startVertex = startVertex;
+	}
+	
+	public int getCountOfDiscoveredVertices() {
+		return countOfDiscoveredVertices;
 	}
 	
 }

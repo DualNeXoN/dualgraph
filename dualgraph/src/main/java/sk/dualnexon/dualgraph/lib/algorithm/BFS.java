@@ -15,6 +15,8 @@ import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
 public class BFS extends Algorithm {
 	
 	private AdjacencyList adjMask;
+	private Vertex startVertex = null;
+	private int countOfDiscoveredVertices = -1;
 	
 	public BFS(Graph graph) {
 		super(graph);
@@ -27,10 +29,11 @@ public class BFS extends Algorithm {
 			throw new NoVerticesException(this);
 		}
 		
-		Vertex s = getStartingVertex();
-		
-		if(s == null) {
-			return;
+		if(startVertex == null) {
+			startVertex = getStartingVertex();
+			if(startVertex == null) {
+				return;
+			}
 		}
 		
         HashMap<Vertex, Boolean> visited = new HashMap<>();
@@ -40,25 +43,27 @@ public class BFS extends Algorithm {
  
         LinkedList<Vertex> queue = new LinkedList<Vertex>();
  
-        visited.put(s, true);
-        queue.add(s);
+        visited.put(startVertex, true);
+        queue.add(startVertex);
+        countOfDiscoveredVertices = 1;
  
         while(queue.size() != 0) {
         	
-            s = queue.poll();
-            System.out.print(s.getNamespace().getText() + " ");
+            startVertex = queue.poll();
+            System.out.print(startVertex.getNamespace().getText() + " ");
             GraphMask mask = new GraphMask(graph);
 			visualizer.addMask(mask);
-			adjMask.addVertex(s);
+			adjMask.addVertex(startVertex);
 			mask.applyMask(adjMask.clone());
 			visualizer.applyLastMask();
  
-            Iterator<Vertex> i = graph.getAdjacencyList().getVertexList(s).keySet().iterator();
+            Iterator<Vertex> i = graph.getAdjacencyList().getVertexList(startVertex).keySet().iterator();
             while(i.hasNext()) {
                 Vertex n = i.next();
                 if(!visited.get(n)) {
                     visited.put(n, true);
                     queue.add(n);
+                    countOfDiscoveredVertices++;
                 }
             }
         }
@@ -66,6 +71,14 @@ public class BFS extends Algorithm {
         System.out.println();
 		
         finished();
+	}
+	
+	public void setStartVertex(Vertex startVertex) {
+		this.startVertex = startVertex;
+	}
+	
+	public int getCountOfDiscoveredVertices() {
+		return countOfDiscoveredVertices;
 	}
 	
 }
