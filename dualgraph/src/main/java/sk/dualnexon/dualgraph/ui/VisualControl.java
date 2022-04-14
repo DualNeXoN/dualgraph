@@ -12,6 +12,8 @@ public class VisualControl implements Updatable {
 	
 	private static final String LABEL_BACK = "Previous step";
 	private static final String LABEL_FORWARD = "Next step";
+	private static final String LABEL_FIRST = "To first step";
+	private static final String LABEL_LAST = "To last step";
 	private static final String LABEL_DEFAULT_TEXT = "0/0";
 	private static final double BTN_MARGIN = 10;
 	
@@ -32,6 +34,12 @@ public class VisualControl implements Updatable {
 			algorithm.getGraph().getWorkspace().destroyCurrentAlgorithm();
 		});
 		
+		Button btnFirst = new Button(LABEL_FIRST);
+		btnFirst.setOnAction(e-> {
+			algorithm.getVisualizer().applyMask(0);
+			update();
+		});
+		
 		Button btnBack = new Button(LABEL_BACK);
 		btnBack.setOnAction(e-> {
 			algorithm.getVisualizer().previousStep();
@@ -44,6 +52,12 @@ public class VisualControl implements Updatable {
 			update();
 		});
 		
+		Button btnLast = new Button(LABEL_LAST);
+		btnLast.setOnAction(e-> {
+			algorithm.getVisualizer().applyLastMask();
+			update();
+		});
+		
 		labelIteration = new Label(LABEL_DEFAULT_TEXT);
 		labelIteration.setFont(new Font(32));
 		
@@ -52,8 +66,10 @@ public class VisualControl implements Updatable {
 		HBox.setMargin(btnDestroy, new Insets(BTN_MARGIN));
 		HBox.setMargin(btnBack, new Insets(BTN_MARGIN));
 		HBox.setMargin(btnForward, new Insets(BTN_MARGIN));
+		HBox.setMargin(btnFirst, new Insets(BTN_MARGIN));
+		HBox.setMargin(btnLast, new Insets(BTN_MARGIN));
 		box.setAlignment(Pos.CENTER);
-		box.getChildren().addAll(btnDestroy, btnBack, labelIteration, btnForward);
+		box.getChildren().addAll(btnDestroy, btnFirst, btnBack, labelIteration, btnForward, btnLast);
 		algorithm.getGraph().getWorkspace().addNode(box);
 		
 	}
