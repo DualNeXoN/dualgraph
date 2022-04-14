@@ -129,7 +129,16 @@ public class App extends Application {
     	});
     	
     	menuAlgorithm.getItems().addAll(menuAlgorithmBFS, menuAlgorithmDFS, menuAlgorithmBridgeDetection, menuAlgorithmCycleDetection, menuAlgorithmPrimMST, menuAlgorithmPrimMaxSpanningTree);
-    	menuBar.getMenus().addAll(menuFile, menuAlgorithm);
+    	
+    	Menu menuHelp = new Menu("Help");
+    	
+    	MenuItem menuUse = new MenuItem("How to use");
+    	menuUse.setOnAction(e-> {
+    		showInfoAlert(FileHandler.get().loadTextFileFromRes("use.txt"));
+    	});
+    	menuHelp.getItems().addAll(menuUse);
+    	
+    	menuBar.getMenus().addAll(menuFile, menuAlgorithm, menuHelp);
         VBox menuBox = new VBox(menuBar);
     	
     	tabPane = new TabPane();
@@ -177,6 +186,12 @@ public class App extends Application {
     public void showWarningAlert(String titleMessage) {
     	Alert alert = new Alert(AlertType.WARNING);
     	alert.setHeaderText(titleMessage);
+    	alert.show();
+    }
+    
+    public void showInfoAlert(String contentText) {
+    	Alert alert = new Alert(AlertType.INFORMATION);
+    	alert.setHeaderText(contentText);
     	alert.show();
     }
     

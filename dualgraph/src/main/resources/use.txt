@@ -1,0 +1,13 @@
+BASIC GRAPH EDITOR FUNCTIONS
+Create vertex: Hold down Ctrl + Left mouse click
+Create edge: Right click on vertex and choose starting and ending points
+Remove vertex: Right click on vertex and select "Delete Vertex"
+Remove edge: Right click on edge and select "Delete Edge"
+Change edge weight: Right click on edge and select "Change value"
+Change edge to (un)directed: Right click on edge and select "Directed/Undirected"
+Swap edge direction: Right click on edge arrow and select "Swap vertex direction"
+Move vertices and labels by dragging them with mouse
+
+USEFUL INFO
+You can rename project tab by right click on tab and select "Rename"
+You can't modify graph while in visualization mode. Simply press X button to end visualization

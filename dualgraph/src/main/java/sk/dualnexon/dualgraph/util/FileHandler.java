@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 import org.json.JSONArray;
@@ -13,6 +15,7 @@ import org.json.JSONTokener;
 
 import javafx.stage.FileChooser;
 import sk.dualnexon.dualgraph.App;
+import sk.dualnexon.dualgraph.GlobalSettings;
 import sk.dualnexon.dualgraph.lib.Edge;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.lib.Edge.DirectionType;
@@ -140,6 +143,23 @@ public class FileHandler {
 			ex.printStackTrace();
 		}
 		
+	}
+	
+	public String loadTextFileFromRes(String path) {
+		String output = "";
+		
+		try {
+			InputStream in = ClassLoader.getSystemResourceAsStream((GlobalSettings.IS_JAR ? "resources/" : "") + path);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			String read = null;
+			while((read = reader.readLine()) != null) {
+				output += read + "\n";
+			}
+		} catch(IOException ex) {
+			ex.printStackTrace();
+		}
+		
+		return output;
 	}
 	
 	private Vertex getVertexByUUID(Workspace workspace, String uuid) {
