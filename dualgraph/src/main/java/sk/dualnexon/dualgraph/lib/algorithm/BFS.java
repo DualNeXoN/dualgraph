@@ -16,7 +16,7 @@ public class BFS extends Algorithm {
 	
 	private static final String ALGORITHM_NAME = "Breadth-first Search";
 	private static final String MASK_MESSAGE_START = "Starting in vertex %s";
-	private static final String MASK_MESSAGE_DISCOVER = "Vertex %s discovered";
+	private static final String MASK_MESSAGE_DISCOVER = "Vertex %s discovered from vertex %s";
 	
 	private AdjacencyList adjMask;
 	private boolean firstWasDiscovered;
@@ -46,20 +46,24 @@ public class BFS extends Algorithm {
         	visited.put(v, false);
         }
  
-        LinkedList<Vertex> queue = new LinkedList<Vertex>();
+        LinkedList<Vertex[]> queue = new LinkedList<>();
  
         visited.put(s, true);
-        queue.add(s);
+        Vertex[] map = {s, s};
+        queue.add(map);
  
         while(queue.size() != 0) {
         	
-            s = queue.poll();
-            String outputMessage = String.format((firstWasDiscovered ? MASK_MESSAGE_DISCOVER : MASK_MESSAGE_START), s.getNamespace().getText());
+            map = queue.poll();
+            Vertex r = map[0];
+            s = map[1];
+            String outputMessage = String.format((firstWasDiscovered ? MASK_MESSAGE_DISCOVER : MASK_MESSAGE_START), s.getNamespace().getText(), r.getNamespace().getText());
             firstWasDiscovered = true;
             System.out.println(outputMessage);
             GraphMask mask = new GraphMask(graph, outputMessage);
 			visualizer.addMask(mask);
 			adjMask.addVertex(s);
+			if(s != r) adjMask.addEdge(graph.getEdgeByEndPoints(s, r));
 			mask.applyMask(adjMask.clone());
 			visualizer.applyLastMask();
  
@@ -68,7 +72,7 @@ public class BFS extends Algorithm {
                 Vertex n = i.next();
                 if(!visited.get(n)) {
                     visited.put(n, true);
-                    queue.add(n);
+                    queue.add(new Vertex[] {s, n});
                 }
             }
         }

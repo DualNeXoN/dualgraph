@@ -15,7 +15,7 @@ public class DFS extends Algorithm {
 	
 	private static final String ALGORITHM_NAME = "Depth-first Search";
 	private static final String MASK_MESSAGE_START = "Starting in vertex %s";
-	private static final String MASK_MESSAGE_DISCOVER = "Vertex %s discovered";
+	private static final String MASK_MESSAGE_DISCOVER = "Vertex %s discovered from vertex %s";
 	
 	private AdjacencyList adjMask;
 	private boolean firstWasDiscovered;
@@ -45,21 +45,22 @@ public class DFS extends Algorithm {
         	visited.put(v, false);
         }
         
-        recursive(s, visited);
+        recursive(s, s, visited);
         System.out.println();
         finished();
 		
 	}
 	
-	private void recursive(Vertex v, HashMap<Vertex, Boolean> visited) {
+	private void recursive(Vertex r, Vertex v, HashMap<Vertex, Boolean> visited) {
 		
 		visited.put(v, true);
-        String outputMessage = String.format((firstWasDiscovered ? MASK_MESSAGE_DISCOVER : MASK_MESSAGE_START), v.getNamespace().getText());
+        String outputMessage = String.format((firstWasDiscovered ? MASK_MESSAGE_DISCOVER : MASK_MESSAGE_START), v.getNamespace().getText(), r.getNamespace().getText());
         firstWasDiscovered = true;
         System.out.println(outputMessage);
         GraphMask mask = new GraphMask(graph, outputMessage);
 		visualizer.addMask(mask);
 		adjMask.addVertex(v);
+		if(r != v) adjMask.addEdge(graph.getEdgeByEndPoints(r, v));
 		mask.applyMask(adjMask.clone());
 		visualizer.applyLastMask();
  
@@ -67,7 +68,7 @@ public class DFS extends Algorithm {
         while(i.hasNext()) {
             Vertex n = i.next();
             if(!visited.get(n)) {
-            	recursive(n, visited);
+            	recursive(v, n, visited);
             }
         }
 		
