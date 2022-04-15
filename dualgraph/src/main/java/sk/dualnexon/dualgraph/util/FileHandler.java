@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -18,6 +19,7 @@ import sk.dualnexon.dualgraph.App;
 import sk.dualnexon.dualgraph.GlobalSettings;
 import sk.dualnexon.dualgraph.lib.Edge;
 import sk.dualnexon.dualgraph.lib.Vertex;
+import sk.dualnexon.dualgraph.util.exception.NotValidFormatException;
 import sk.dualnexon.dualgraph.lib.Edge.DirectionType;
 import sk.dualnexon.dualgraph.window.Workspace;
 
@@ -89,7 +91,7 @@ public class FileHandler {
 		
 	}
 	
-	public void load() {
+	public void load() throws NotValidFormatException {
 		
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("DG Workspaces", "*.dgw"));
@@ -141,6 +143,10 @@ public class FileHandler {
 			App.get().getTabPane().getTabs().add(w);
 		} catch (FileNotFoundException ex) {
 			ex.printStackTrace();
+			App.get().showWarningAlert("File not found");
+		} catch(JSONException ex) {
+			ex.printStackTrace();
+			throw new NotValidFormatException();
 		}
 		
 	}

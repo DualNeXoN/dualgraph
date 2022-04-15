@@ -24,6 +24,7 @@ import sk.dualnexon.dualgraph.lib.algorithm.DFS;
 import sk.dualnexon.dualgraph.lib.algorithm.MinSpanningTreePrim;
 import sk.dualnexon.dualgraph.lib.algorithm.MaxSpanningTreePrim;
 import sk.dualnexon.dualgraph.util.FileHandler;
+import sk.dualnexon.dualgraph.util.exception.NotValidFormatException;
 import sk.dualnexon.dualgraph.window.Window;
 import sk.dualnexon.dualgraph.window.Workspace;
 
@@ -57,7 +58,11 @@ public class App extends Application {
     	});
     	MenuItem menuItemOpen = new MenuItem("Open...");
     	menuItemOpen.setOnAction(e -> {
-    		FileHandler.get().load();
+    		try {
+    			FileHandler.get().load();
+    		} catch(NotValidFormatException ex) {
+    			showWarningAlert(ex.toString());
+    		}
     	});
     	MenuItem menuItemSave = new MenuItem("Save...");
     	menuItemSave.setOnAction(e -> {
