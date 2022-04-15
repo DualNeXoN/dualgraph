@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
 
@@ -19,8 +20,11 @@ public class VisualControl implements Updatable {
 	
 	private Algorithm algorithm;
 	
-	private HBox box;
+	private VBox boxControl;
+	private HBox boxTop, boxButtons, boxMessage;
 	private Label labelIteration;
+	private Label labelName;
+	private Label labelMessage;
 	
 	public VisualControl(Algorithm algorithm) {
 		this.algorithm = algorithm;
@@ -29,31 +33,40 @@ public class VisualControl implements Updatable {
 	
 	private void createControls() {
 		
+		boxControl = new VBox();
+		boxControl.setVisible(false);
+		
+		labelName = new Label(algorithm.getName());
+		labelName.setFont(new Font(22));
+		
+		boxTop = new HBox(BTN_MARGIN);
+		boxTop.getChildren().addAll(labelName);
+		
 		Button btnDestroy = new Button("X");
-		btnDestroy.setOnAction(e-> {
+		btnDestroy.setOnAction(e -> {
 			algorithm.getGraph().getWorkspace().destroyCurrentAlgorithm();
 		});
 		
 		Button btnFirst = new Button(LABEL_FIRST);
-		btnFirst.setOnAction(e-> {
+		btnFirst.setOnAction(e -> {
 			algorithm.getVisualizer().applyMask(0);
 			update();
 		});
 		
 		Button btnBack = new Button(LABEL_BACK);
-		btnBack.setOnAction(e-> {
+		btnBack.setOnAction(e -> {
 			algorithm.getVisualizer().previousStep();
 			update();
 		});
 		
 		Button btnForward = new Button(LABEL_FORWARD);
-		btnForward.setOnAction(e-> {
+		btnForward.setOnAction(e -> {
 			algorithm.getVisualizer().nextStep();
 			update();
 		});
 		
 		Button btnLast = new Button(LABEL_LAST);
-		btnLast.setOnAction(e-> {
+		btnLast.setOnAction(e -> {
 			algorithm.getVisualizer().applyLastMask();
 			update();
 		});
@@ -61,32 +74,42 @@ public class VisualControl implements Updatable {
 		labelIteration = new Label(LABEL_DEFAULT_TEXT);
 		labelIteration.setFont(new Font(32));
 		
-		box = new HBox(BTN_MARGIN);
-		box.setVisible(false);
+		boxButtons = new HBox(BTN_MARGIN);
 		HBox.setMargin(btnDestroy, new Insets(BTN_MARGIN));
 		HBox.setMargin(btnBack, new Insets(BTN_MARGIN));
 		HBox.setMargin(btnForward, new Insets(BTN_MARGIN));
 		HBox.setMargin(btnFirst, new Insets(BTN_MARGIN));
 		HBox.setMargin(btnLast, new Insets(BTN_MARGIN));
-		box.setAlignment(Pos.CENTER);
-		box.getChildren().addAll(btnDestroy, btnFirst, btnBack, labelIteration, btnForward, btnLast);
-		algorithm.getGraph().getWorkspace().addNode(box);
+		boxButtons.setAlignment(Pos.CENTER);
+		boxButtons.getChildren().addAll(btnDestroy, btnFirst, btnBack, labelIteration, btnForward, btnLast);
+		
+		labelMessage = new Label();
+		labelMessage.setFont(new Font(18));
+		
+		boxMessage = new HBox();
+		boxMessage.getChildren().add(labelMessage);
+		
+		boxControl.getChildren().addAll(boxTop, boxButtons, boxMessage);
+		algorithm.getGraph().getWorkspace().addNode(boxControl);
 		
 	}
 	
 	public void setVisible(boolean value) {
-		box.setVisible(value);
+		boxControl.setVisible(value);
 	}
 	
 	@Override
 	public void update() {
 		int inc = (algorithm.getVisualizer().getMaskCount() > 0 ? 1 : 0);
 		labelIteration.setText(algorithm.getVisualizer().getCurrentMask()+inc + "/" + algorithm.getVisualizer().getMasks().size());
+		labelName.setText(algorithm.getName());
+		labelMessage.setText(algorithm.getVisualizer().getMasks().get(algorithm.getVisualizer().getCurrentMask()).getMessage());
+		boxControl.toFront();
 	}
 	
 	@Override
 	public void destroy() {
-		algorithm.getGraph().getWorkspace().removeNode(box);
+		algorithm.getGraph().getWorkspace().removeNode(boxControl);
 	}
 	
 }

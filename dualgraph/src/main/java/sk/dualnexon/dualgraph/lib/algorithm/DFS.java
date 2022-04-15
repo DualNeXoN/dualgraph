@@ -13,10 +13,16 @@ import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
 
 public class DFS extends Algorithm {
 	
+	private static final String ALGORITHM_NAME = "Depth-first Search";
+	private static final String MASK_MESSAGE_START = "Starting in vertex %s";
+	private static final String MASK_MESSAGE_DISCOVER = "Vertex %s discovered";
+	
 	private AdjacencyList adjMask;
+	private boolean firstWasDiscovered;
 	
 	public DFS(Graph graph) {
 		super(graph);
+		name = ALGORITHM_NAME;
 		adjMask = new AdjacencyList();
 	}
 	
@@ -32,6 +38,8 @@ public class DFS extends Algorithm {
 			return;
 		}
 		
+		firstWasDiscovered = false;
+		
 		HashMap<Vertex, Boolean> visited = new HashMap<>();
         for(Vertex v : graph.getVertices()) {
         	visited.put(v, false);
@@ -46,8 +54,10 @@ public class DFS extends Algorithm {
 	private void recursive(Vertex v, HashMap<Vertex, Boolean> visited) {
 		
 		visited.put(v, true);
-        System.out.print(v.getNamespace().getText() + " ");
-        GraphMask mask = new GraphMask(graph);
+        String outputMessage = String.format((firstWasDiscovered ? MASK_MESSAGE_DISCOVER : MASK_MESSAGE_START), v.getNamespace().getText());
+        firstWasDiscovered = true;
+        System.out.println(outputMessage);
+        GraphMask mask = new GraphMask(graph, outputMessage);
 		visualizer.addMask(mask);
 		adjMask.addVertex(v);
 		mask.applyMask(adjMask.clone());

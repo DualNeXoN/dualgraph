@@ -14,10 +14,16 @@ import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
 
 public class BFS extends Algorithm {
 	
+	private static final String ALGORITHM_NAME = "Breadth-first Search";
+	private static final String MASK_MESSAGE_START = "Starting in vertex %s";
+	private static final String MASK_MESSAGE_DISCOVER = "Vertex %s discovered";
+	
 	private AdjacencyList adjMask;
+	private boolean firstWasDiscovered;
 	
 	public BFS(Graph graph) {
 		super(graph);
+		name = ALGORITHM_NAME;
 		adjMask = new AdjacencyList();
 	}
 	
@@ -33,6 +39,8 @@ public class BFS extends Algorithm {
 			return;
 		}
 		
+		firstWasDiscovered = false;
+		
         HashMap<Vertex, Boolean> visited = new HashMap<>();
         for(Vertex v : graph.getVertices()) {
         	visited.put(v, false);
@@ -46,8 +54,10 @@ public class BFS extends Algorithm {
         while(queue.size() != 0) {
         	
             s = queue.poll();
-            System.out.print(s.getNamespace().getText() + " ");
-            GraphMask mask = new GraphMask(graph);
+            String outputMessage = String.format((firstWasDiscovered ? MASK_MESSAGE_DISCOVER : MASK_MESSAGE_START), s.getNamespace().getText());
+            firstWasDiscovered = true;
+            System.out.println(outputMessage);
+            GraphMask mask = new GraphMask(graph, outputMessage);
 			visualizer.addMask(mask);
 			adjMask.addVertex(s);
 			mask.applyMask(adjMask.clone());

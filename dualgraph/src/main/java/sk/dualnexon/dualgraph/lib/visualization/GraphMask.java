@@ -13,10 +13,12 @@ public class GraphMask implements Destroyable {
 	
 	private Graph graph;
 	private AdjacencyList mask;
+	private String message;
 	
-	public GraphMask(Graph graph) {
+	public GraphMask(Graph graph, String message) {
 		this.graph = graph;
 		mask = new AdjacencyList();
+		this.message = message;
 	}
 	
 	public AdjacencyList getMask() {
@@ -50,6 +52,10 @@ public class GraphMask implements Destroyable {
 		}
 		
 		graph.update();
+	}
+	
+	public String getMessage() {
+		return message;
 	}
 
 	@Override

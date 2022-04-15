@@ -12,6 +12,9 @@ import sk.dualnexon.dualgraph.ui.VisualControl;
 
 public abstract class Algorithm implements Destroyable {
 	
+	private static final String DEFAULT_ALGORITHM_NAME = "Basic algorithm";
+	
+	protected String name = DEFAULT_ALGORITHM_NAME;
 	protected Graph graph;
 	protected GraphVisualizer visualizer;
 	protected VisualControl controls;
@@ -35,6 +38,10 @@ public abstract class Algorithm implements Destroyable {
 		return controls;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	public abstract void calculate() throws AlgorithmException;
 	
 	protected void finished() {
@@ -48,7 +55,6 @@ public abstract class Algorithm implements Destroyable {
 		choiceDialog.setContentText("Select starting vertex:");
 		Optional<Vertex> opt = choiceDialog.showAndWait();
 		if(opt.isPresent()) {
-			controls.update();
 			return opt.get();
 		} else {
 			return null;

@@ -287,6 +287,15 @@ public class Edge extends BaseGraphNode {
 		namespace.update();
 	}
 	
+	@Override
+	public String toString() {
+		if(direction.equals(DirectionType.BIDIRECTIONAL)) {
+			return String.format("%s-%s", firstVertex.getNamespace().getText(), secondVertex.getNamespace().getText());
+		} else {
+			return String.format("%s->%s", (vertexDirection.equals(secondVertex) ? firstVertex.getNamespace().getText() : secondVertex.getNamespace().getText()), vertexDirection.getNamespace().getText());
+		}
+	}
+	
 	class EdgeArrow extends Polygon implements Updatable {
 		
 		private ContextMenu contextMenu;

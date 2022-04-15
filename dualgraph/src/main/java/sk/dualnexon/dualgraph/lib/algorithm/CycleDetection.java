@@ -4,15 +4,24 @@ import java.util.HashMap;
 
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.NoVerticesException;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
 
 public class CycleDetection extends Algorithm {
 	
+	private static final String ALGORITHM_NAME = "Cycle Detection";
+	
 	public CycleDetection(Graph graph) {
 		super(graph);
+		name = ALGORITHM_NAME;
 	}
 	
-	public void calculate() {
+	public void calculate() throws AlgorithmException {
+		
+		if(graph.getVertices().size() == 0) {
+			throw new NoVerticesException(this);
+		}
 
 		HashMap<Vertex, Boolean> visited = new HashMap<>();
 		for(Vertex v : graph.getVertices()) {

@@ -267,6 +267,7 @@ public class Workspace extends Tab implements Updatable {
 	public void update() {
 		grid.update();
 		graph.update();
+		if(algorithm != null) algorithm.getControls().update();
 	}
 	
 }

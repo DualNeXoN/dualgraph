@@ -6,10 +6,14 @@ import java.util.Iterator;
 import sk.dualnexon.dualgraph.lib.AdjacencyList;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.NoVerticesException;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
 import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
 
 public class BridgeDetection extends Algorithm {
+	
+	private static final String ALGORITHM_NAME = "Bridge Detection";
 	
 	private AdjacencyList adj;
 	private AdjacencyList adjMask;
@@ -17,13 +21,18 @@ public class BridgeDetection extends Algorithm {
 	
 	public BridgeDetection(Graph graph) {
 		super(graph);
+		name = ALGORITHM_NAME;
 		adj = graph.getAdjacencyList();
 		adjMask = new AdjacencyList();
 	}
 	
-	public void calculate() {
+	public void calculate() throws AlgorithmException {
 		
-		GraphMask mask = new GraphMask(graph);
+		if(graph.getVertices().size() == 0) {
+			throw new NoVerticesException(this);
+		}
+		
+		GraphMask mask = new GraphMask(graph, "");
 		visualizer.addMask(mask);
 		
 		HashMap<Vertex, Boolean> visited = new HashMap<>();

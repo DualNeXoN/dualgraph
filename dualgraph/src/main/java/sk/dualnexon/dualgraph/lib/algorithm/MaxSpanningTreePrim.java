@@ -15,11 +15,15 @@ import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
 
 public class MaxSpanningTreePrim extends Algorithm {
 	
+	private static final String ALGORITHM_NAME = "Prim Max Spanning Tree";
+	private static final String MASK_MESSAGE = "Edge with maximal weight of adjacent vertices (%s) added to spanning tree";
+	
 	private AdjacencyList adj;
 	private AdjacencyList adjMask;
 	
 	public MaxSpanningTreePrim(Graph graph) {
 		super(graph);
+		name = ALGORITHM_NAME;
 		adj = graph.getAdjacencyList();
 		adjMask = new AdjacencyList();
 	}
@@ -74,7 +78,7 @@ public class MaxSpanningTreePrim extends Algorithm {
 				used.put(nextAddedEdge.getFirstVertex(), true);
 				used.put(nextAddedEdge.getSecondVertex(), true);
 				outputListEdges.addLast(nextAddedEdge);
-				GraphMask mask = new GraphMask(graph);
+				GraphMask mask = new GraphMask(graph, String.format(MASK_MESSAGE, nextAddedEdge.toString()));
 				visualizer.addMask(mask);
 				adjMask.addEdge(nextAddedEdge);
 				mask.applyMask(adjMask.clone());

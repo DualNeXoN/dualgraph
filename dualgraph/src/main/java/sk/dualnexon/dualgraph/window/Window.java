@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 
 public class Window extends Stage {
 	
+	private static final String DEFAULT_WINDOW_TITLE = "DualGraph";
 	private static final double DEFAULT_SCALE_DIVIDE_WIDTH = 1.5;
 	private static final double DEFAULT_SCALE_DIVIDE_HEIGHT = 1.5;
 
@@ -16,6 +17,7 @@ public class Window extends Stage {
 		
 		setWidth(width);
 		setHeight(height);
+		setTitle(DEFAULT_WINDOW_TITLE);
 		
 		show();
 		
