@@ -2,8 +2,10 @@ package sk.dualnexon.dualgraph.lib.algorithm;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import sk.dualnexon.dualgraph.lib.AdjacencyList;
+import sk.dualnexon.dualgraph.lib.Edge;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
@@ -18,6 +20,7 @@ public class BridgeDetection extends Algorithm {
 	private AdjacencyList adj;
 	private AdjacencyList adjMask;
 	private int time = 0;
+	private LinkedList<Edge> bridges;
 	
 	public BridgeDetection(Graph graph) {
 		super(graph);
@@ -32,8 +35,7 @@ public class BridgeDetection extends Algorithm {
 			throw new NoVerticesException(this);
 		}
 		
-		GraphMask mask = new GraphMask(graph, "");
-		visualizer.addMask(mask);
+		bridges = new LinkedList<>();
 		
 		HashMap<Vertex, Boolean> visited = new HashMap<>();
 		HashMap<Vertex, Integer> disc = new HashMap<Vertex, Integer>();
@@ -50,6 +52,8 @@ public class BridgeDetection extends Algorithm {
 			}
 		}
 		
+		GraphMask mask = new GraphMask(graph, (bridges.size() == 0 ? "V grafe neexistujú žiadne mosty" : "V grafe existuje mosty: " + getBridgesAsStringList()));
+		visualizer.addMask(mask);
 		mask.applyMask(adjMask.clone());
 		visualizer.applyLastMask();
 		
@@ -79,13 +83,25 @@ public class BridgeDetection extends Algorithm {
 
 				// If the lowest vertex reachable from subtree under v is below u in DFS tree, then u-v is a bridge
 				if(low.get(adjacentVertex) > disc.get(vertex)) {
-					adjMask.addEdge(graph.getEdgeByEndPoints(vertex, adjacentVertex));
+					Edge bridge = graph.getEdgeByEndPoints(vertex, adjacentVertex);
+					adjMask.addEdge(bridge);
+					bridges.add(bridge);
 				}
 			} else if(!adjacentVertex.equals(parent.get(vertex))) { // Update low value of u for parent function calls.
 				low.put(vertex, Math.min(low.get(vertex), disc.get(adjacentVertex)));
 			}
 		}
 		
+	}
+	
+	private String getBridgesAsStringList() {
+		String output = "";
+		
+		for(Edge bridge : bridges) {
+			output += bridge.toString() + ", ";
+		}
+		
+		return output.substring(0, output.length()-2);
 	}
 
 }
