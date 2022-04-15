@@ -36,7 +36,7 @@ public class BFS extends Algorithm {
 		Vertex s = getStartingVertex();
 		
 		if(s == null) {
-			return;
+			throw new AlgorithmException(this);
 		}
 		
 		firstWasDiscovered = false;

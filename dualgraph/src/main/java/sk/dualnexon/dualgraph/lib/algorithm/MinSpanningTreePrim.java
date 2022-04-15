@@ -37,7 +37,7 @@ public class MinSpanningTreePrim extends Algorithm {
 		Vertex startVertex = getStartingVertex();
 		
 		if(startVertex == null) {
-			return;
+			throw new AlgorithmException(this);
 		}
 		
 		// Map of used vertices

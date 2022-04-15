@@ -165,7 +165,7 @@ public class Workspace extends Tab implements Updatable {
 			graph.setLocked(true);
 		} catch (AlgorithmException ex) {
 			algorithm.destroy();
-			App.get().showWarningAlert(ex.getMessage());
+			if(!(ex instanceof AlgorithmException)) App.get().showWarningAlert(ex.getMessage());
 		}
 	}
 	
