@@ -20,6 +20,7 @@ import sk.dualnexon.dualgraph.App;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmInterruptedException;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
 import sk.dualnexon.dualgraph.ui.Updatable;
 import sk.dualnexon.dualgraph.util.FileHandler;
@@ -165,7 +166,7 @@ public class Workspace extends Tab implements Updatable {
 			graph.setLocked(true);
 		} catch (AlgorithmException ex) {
 			algorithm.destroy();
-			if(!(ex instanceof AlgorithmException)) App.get().showWarningAlert(ex.getMessage());
+			if(!(ex instanceof AlgorithmInterruptedException)) App.get().showWarningAlert(ex.getMessage());
 		}
 	}
 	

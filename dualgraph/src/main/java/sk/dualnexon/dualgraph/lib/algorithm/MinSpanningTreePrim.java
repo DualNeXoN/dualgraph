@@ -8,6 +8,7 @@ import sk.dualnexon.dualgraph.lib.Edge;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmInterruptedException;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.NoVerticesException;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.UnsupportedGraphException;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
@@ -37,7 +38,7 @@ public class MinSpanningTreePrim extends Algorithm {
 		Vertex startVertex = getStartingVertex();
 		
 		if(startVertex == null) {
-			throw new AlgorithmException(this);
+			throw new AlgorithmInterruptedException(this);
 		}
 		
 		// Map of used vertices

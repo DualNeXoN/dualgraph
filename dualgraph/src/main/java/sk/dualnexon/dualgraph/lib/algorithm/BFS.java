@@ -8,6 +8,7 @@ import sk.dualnexon.dualgraph.lib.AdjacencyList;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
+import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmInterruptedException;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.NoVerticesException;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
 import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
@@ -36,7 +37,7 @@ public class BFS extends Algorithm {
 		Vertex s = getStartingVertex();
 		
 		if(s == null) {
-			throw new AlgorithmException(this);
+			throw new AlgorithmInterruptedException(this);
 		}
 		
 		firstWasDiscovered = false;
