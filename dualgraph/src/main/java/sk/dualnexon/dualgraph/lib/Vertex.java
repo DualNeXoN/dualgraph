@@ -44,7 +44,10 @@ public class Vertex extends BaseGraphNode {
 		this.namespaceDefaultOffsetX = -size / 1.5;
 		this.namespaceDefaultOffsetY = -size * 1.25;
 		
-		namespace = new Namespace(this, this.namespaceDefaultOffsetX, this.namespaceDefaultOffsetY, graph.getWorkspace().getVertexNameConvention().getNextName());
+		String name = "";
+		while(graph.hasVertexName(name = graph.getWorkspace().getVertexNameConvention().getNextName()));
+		
+		namespace = new Namespace(this, this.namespaceDefaultOffsetX, this.namespaceDefaultOffsetY, name);
 		namespace.setOffsetX(-size + namespace.getNode().getBoundsInLocal().getWidth());
 		graph.getWorkspace().addNode(namespace.getNode());
 		

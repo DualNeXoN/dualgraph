@@ -165,6 +165,13 @@ public class Graph implements Updatable {
 		}
 	}
 	
+	public boolean hasVertexName(String name) {
+		for(Vertex vertex : vertices) {
+			if(vertex.getNamespace().getText().equals(name)) return true;
+		}
+		return false;
+	}
+	
 	public AdjacencyList getAdjacencyList() {
 		AdjacencyList adj = new AdjacencyList();
 		

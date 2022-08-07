@@ -8,6 +8,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import sk.dualnexon.dualgraph.App;
 import sk.dualnexon.dualgraph.lib.BaseGraphNode;
+import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.ui.theme.ColorUI;
 import sk.dualnexon.dualgraph.ui.theme.ThemeHandler;
 
@@ -97,7 +98,14 @@ public class Namespace implements Updatable {
 
 		Optional<String> result = dialog.showAndWait();
 		if(result.isPresent()) {
-		    setText(result.get());
+			String newName = result.get();
+			for(Vertex vertex : graphNode.getGraph().getVertices()) {
+				if(vertex.getNamespace().getText().equals(newName)) {
+					App.get().showWarningAlert("Vertex with name " + newName + " already exists!");
+					return;
+				}
+			}
+		    setText(newName);
 		}
 	}
 	
