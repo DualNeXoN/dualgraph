@@ -1,0 +1,47 @@
+{"themes": [{
+    "settings": [
+        {
+            "red": 0,
+            "green": 0,
+            "ui": "WORKSPACE_BACKGROUND",
+            "blue": 0
+        },
+        {
+            "red": 1,
+            "green": 1,
+            "ui": "GRID_LINE",
+            "blue": 1
+        },
+        {
+            "red": 1,
+            "green": 1,
+            "ui": "VERTEX_OUTLINE",
+            "blue": 1
+        },
+        {
+            "red": 0,
+            "green": 0,
+            "ui": "VERTEX_FILL",
+            "blue": 1
+        },
+        {
+            "red": 1,
+            "green": 1,
+            "ui": "NAMESPACE",
+            "blue": 1
+        },
+        {
+            "red": 1,
+            "green": 1,
+            "ui": "EDGE",
+            "blue": 1
+        },
+        {
+            "red": 1,
+            "green": 0,
+            "ui": "NODE_SELECT",
+            "blue": 0
+        }
+    ],
+    "name": "Saved Theme 1"
+}]}

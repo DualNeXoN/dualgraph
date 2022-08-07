@@ -10,19 +10,21 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import sk.dualnexon.dualgraph.ui.Namespace;
+import sk.dualnexon.dualgraph.ui.theme.ColorUI;
+import sk.dualnexon.dualgraph.ui.theme.ThemeHandler;
 
 public class Vertex extends BaseGraphNode {
 	
 	private static final double DEFAULT_SIZE = 20;
 	private static final double MIN_SIZE = 10;
-	private static final Color DEFAULT_COLOR = Color.BLACK;
+	public static Color defaultColor = ThemeHandler.get().getActiveTheme().getColor(ColorUI.VERTEX_OUTLINE);
 	
 	private String uuid;
 	
 	private double positionX, positionY;
 	private double size;
 	private Circle node;
-	private Color color = DEFAULT_COLOR;
+	private Color color = defaultColor;
 	
 	private Namespace namespace;
 	private double namespaceDefaultOffsetX, namespaceDefaultOffsetY;
@@ -181,7 +183,7 @@ public class Vertex extends BaseGraphNode {
 	}
 	
 	public void setColor(Color color) {
-		this.color = (color != null ? color : DEFAULT_COLOR);
+		this.color = (color != null ? color : defaultColor);
 	}
 	
 	public Color getColor() {
@@ -216,8 +218,8 @@ public class Vertex extends BaseGraphNode {
 		node.setCenterX(getRealPositionX());
 		node.setCenterY(getRealPositionY());
 		node.setRadius(size);
-		node.setFill(Color.WHITE);
-		node.setStroke((isSelected() ? Color.RED : color));
+		node.setFill(ThemeHandler.get().getActiveTheme().getColor(ColorUI.VERTEX_FILL));
+		node.setStroke((isSelected() ? ThemeHandler.get().getActiveTheme().getColor(ColorUI.NODE_SELECT) : color));
 		node.setStrokeWidth(2);
 		node.toFront();
 		

@@ -8,6 +8,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import sk.dualnexon.dualgraph.App;
 import sk.dualnexon.dualgraph.lib.BaseGraphNode;
+import sk.dualnexon.dualgraph.ui.theme.ColorUI;
+import sk.dualnexon.dualgraph.ui.theme.ThemeHandler;
 
 public class Namespace implements Updatable {
 
@@ -23,6 +25,7 @@ public class Namespace implements Updatable {
 		
 		node = new Text(graphNode.getRealPositionX() + offsetX, graphNode.getRealPositionY() + offsetY, text);
 		node.setFont(new Font(24));
+		node.setFill(ThemeHandler.get().getActiveTheme().getColor(ColorUI.NAMESPACE));
 		
 		node.setOnMouseDragged(e -> {
 			if(e.isPrimaryButtonDown()) {

@@ -13,12 +13,14 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import sk.dualnexon.dualgraph.ui.Namespace;
 import sk.dualnexon.dualgraph.ui.Updatable;
+import sk.dualnexon.dualgraph.ui.theme.ColorUI;
+import sk.dualnexon.dualgraph.ui.theme.ThemeHandler;
 
 public class Edge extends BaseGraphNode {
 	
 	private static final int DEFAULT_VALUE = 1;
 	private static final DirectionType DEFAULT_DIRECTION = DirectionType.BIDIRECTIONAL;
-	private static final Color DEFAULT_COLOR = Color.BLACK;
+	public static Color defaultColor = ThemeHandler.get().getActiveTheme().getColor(ColorUI.EDGE);
 	
 	public enum DirectionType {
 		UNIDIRECTIONAL, BIDIRECTIONAL;
@@ -29,7 +31,7 @@ public class Edge extends BaseGraphNode {
 	private int value;
 	private DirectionType direction;
 	private Vertex vertexDirection = null;
-	private Color color = DEFAULT_COLOR;
+	private Color color = defaultColor;
 	
 	private Namespace namespace;
 	
@@ -229,7 +231,7 @@ public class Edge extends BaseGraphNode {
 	}
 	
 	public void setColor(Color color) {
-		this.color = (color != null ? color : DEFAULT_COLOR);
+		this.color = (color != null ? color : defaultColor);
 	}
 	
 	public Color getColor() {
@@ -275,7 +277,7 @@ public class Edge extends BaseGraphNode {
 		node.setEndX(v2X + -graph.getWorkspace().getOffsetX());
 		node.setEndY(v2Y + -graph.getWorkspace().getOffsetY());
 		
-		node.setStroke((isSelected() ? Color.RED : color));
+		node.setStroke((isSelected() ? ThemeHandler.get().getActiveTheme().getColor(ColorUI.NODE_SELECT) : color));
 		node.setStrokeWidth(5);
 		
 		node.toFront();

@@ -1,5 +1,7 @@
 package sk.dualnexon.dualgraph;
 
+import java.util.Optional;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -8,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -22,6 +25,8 @@ import sk.dualnexon.dualgraph.lib.algorithm.BridgeDetection;
 import sk.dualnexon.dualgraph.lib.algorithm.CycleDetection;
 import sk.dualnexon.dualgraph.lib.algorithm.DFS;
 import sk.dualnexon.dualgraph.lib.algorithm.MinSpanningTreePrim;
+import sk.dualnexon.dualgraph.ui.theme.Theme;
+import sk.dualnexon.dualgraph.ui.theme.ThemeHandler;
 import sk.dualnexon.dualgraph.lib.algorithm.MaxSpanningTreePrim;
 import sk.dualnexon.dualgraph.util.FileHandler;
 import sk.dualnexon.dualgraph.util.exception.NotValidFormatException;
@@ -48,6 +53,7 @@ public class App extends Application {
     	instance = this;
     	baseWindow = new Window();
     	new FileHandler();
+    	new ThemeHandler();
     	
     	MenuBar menuBar = new MenuBar();
     	Menu menuFile = new Menu("File");
@@ -59,7 +65,7 @@ public class App extends Application {
     	MenuItem menuItemOpen = new MenuItem("Open...");
     	menuItemOpen.setOnAction(e -> {
     		try {
-    			FileHandler.get().load();
+    			FileHandler.get().loadWorkspace();
     		} catch(NotValidFormatException ex) {
     			showWarningAlert(ex.toString());
     		}
@@ -68,7 +74,7 @@ public class App extends Application {
     	menuItemSave.setOnAction(e -> {
     		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
     		if(currentWorkspace != null) {
-    			FileHandler.get().save(currentWorkspace);
+    			FileHandler.get().saveWorkspace(currentWorkspace);
     		} else {
     			showWarningAlert(MSG_NO_WORKSPACE);
     		}
@@ -135,6 +141,20 @@ public class App extends Application {
     	
     	menuAlgorithm.getItems().addAll(menuAlgorithmBFS, menuAlgorithmDFS, menuAlgorithmBridgeDetection, menuAlgorithmCycleDetection, menuAlgorithmPrimMST, menuAlgorithmPrimMaxSpanningTree);
     	
+    	Menu menuOptions = new Menu("Options");
+    	
+    	MenuItem menuThemes = new MenuItem("Themes");
+    	menuThemes.setOnAction(e -> {
+    		ChoiceDialog<Theme> choiceDialog = new ChoiceDialog<Theme>(ThemeHandler.get().getActiveTheme(), ThemeHandler.get().getThemes());
+    		choiceDialog.setHeaderText(null);
+    		choiceDialog.setContentText("Select theme:");
+    		Optional<Theme> opt = choiceDialog.showAndWait();
+    		if(opt.isPresent()) {
+    			ThemeHandler.get().setActiveTheme(opt.get());
+    		}
+    	});
+    	menuOptions.getItems().addAll(menuThemes);
+    	
     	Menu menuHelp = new Menu("Help");
     	
     	MenuItem menuUse = new MenuItem("How to use");
@@ -143,7 +163,7 @@ public class App extends Application {
     	});
     	menuHelp.getItems().addAll(menuUse);
     	
-    	menuBar.getMenus().addAll(menuFile, menuAlgorithm, menuHelp);
+    	menuBar.getMenus().addAll(menuFile, menuAlgorithm, menuOptions, menuHelp);
         VBox menuBox = new VBox(menuBar);
     	
     	tabPane = new TabPane();

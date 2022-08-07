@@ -115,7 +115,7 @@ public class Workspace extends Tab implements Updatable {
 		});
 		MenuItem saveItem = new MenuItem("Save");
 		saveItem.setOnAction(e -> {
-			FileHandler.get().save(this);
+			FileHandler.get().saveWorkspace(this);
 		});
 		contextMenu.getItems().addAll(renameItem, saveItem);
 		setContextMenu(contextMenu);

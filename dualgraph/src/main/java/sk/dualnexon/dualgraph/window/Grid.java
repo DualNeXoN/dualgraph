@@ -3,9 +3,10 @@ package sk.dualnexon.dualgraph.window;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import sk.dualnexon.dualgraph.ui.Updatable;
+import sk.dualnexon.dualgraph.ui.theme.ColorUI;
+import sk.dualnexon.dualgraph.ui.theme.ThemeHandler;
 
 public class Grid extends Canvas implements Updatable {
 	
@@ -41,10 +42,12 @@ public class Grid extends Canvas implements Updatable {
 		setHeight(screenBounds.getHeight());
 		
 		g2d.clearRect(0, 0, getWidth(), getHeight());
+		g2d.setFill(ThemeHandler.get().getActiveTheme().getColor(ColorUI.WORKSPACE_BACKGROUND));
+		g2d.fillRect(0, 0, getWidth(), getHeight());
 		
 		g2d.setLineWidth(0.25);
-		g2d.setStroke(Color.BLACK);
-		g2d.setFill(Color.BLACK);
+		g2d.setStroke(ThemeHandler.get().getActiveTheme().getColor(ColorUI.GRID_LINE));
+		g2d.setFill(ThemeHandler.get().getActiveTheme().getColor(ColorUI.GRID_LINE));
 		
 		final int CYCLES_WIDTH = (int) getWidth() / spacing;
 		for(int cycle = 0; cycle <= CYCLES_WIDTH+1; cycle++) {
