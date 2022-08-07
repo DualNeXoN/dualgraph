@@ -16,8 +16,8 @@ public class SelectionRectangle extends Canvas implements Updatable {
 	public SelectionRectangle(Workspace workspace, double startPositionX, double startPositionY) {
 		this.workspace = workspace;
 		g2d = getGraphicsContext2D();
-		this.startPositionX = startPositionX;
-		this.startPositionY = startPositionY;
+		setStartPositionX(startPositionX);
+		setStartPositionY(startPositionY);
 		workspace.addNode(this);
 	}
 	
@@ -27,6 +27,7 @@ public class SelectionRectangle extends Canvas implements Updatable {
 	
 	public void setStartPositionX(double startPositionX) {
 		this.startPositionX = startPositionX;
+		endPositionX = startPositionX;
 	}
 	
 	public double getStartPositionY() {
@@ -35,6 +36,7 @@ public class SelectionRectangle extends Canvas implements Updatable {
 	
 	public void setStartPositionY(double startPositionY) {
 		this.startPositionY = startPositionY;
+		endPositionY = startPositionY;
 	}
 	
 	public double getEndPositionX() {
@@ -59,16 +61,22 @@ public class SelectionRectangle extends Canvas implements Updatable {
 	
 	private void calcSelection() {
 		
-		double topLeftX = startPositionX, topLeftY = startPositionY, bottomRightX = endPositionX, bottomRightY = endPositionY;
+		double offX = workspace.getOffsetX();
+		double offY = workspace.getOffsetY();
+		
+		double topLeftX = startPositionX + offX;
+		double topLeftY = startPositionY + offY;
+		double bottomRightX = endPositionX + offX;
+		double bottomRightY = endPositionY + offY;
 		
 		if(startPositionX > endPositionX) {
-			topLeftX = endPositionX;
-			bottomRightX = startPositionX;
+			topLeftX = endPositionX + offX;
+			bottomRightX = startPositionX + offX;
 		}
 		
 		if(startPositionY > endPositionY) {
-			topLeftY = endPositionY;
-			bottomRightY = startPositionY;
+			topLeftY = endPositionY + offY;
+			bottomRightY = startPositionY + offY;
 		}
 		
 		for(Vertex vertex : workspace.getGraph().getVertices()) {
