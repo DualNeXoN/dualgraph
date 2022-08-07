@@ -1,6 +1,11 @@
 package sk.dualnexon.dualgraph;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
+import java.util.Set;
+
+import org.reflections.Reflections;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -21,14 +26,10 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import sk.dualnexon.dualgraph.lib.algorithm.BFS;
-import sk.dualnexon.dualgraph.lib.algorithm.BridgeDetection;
-import sk.dualnexon.dualgraph.lib.algorithm.CycleDetection;
-import sk.dualnexon.dualgraph.lib.algorithm.DFS;
-import sk.dualnexon.dualgraph.lib.algorithm.MinSpanningTreePrim;
+import sk.dualnexon.dualgraph.lib.Graph;
+import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
 import sk.dualnexon.dualgraph.ui.theme.Theme;
 import sk.dualnexon.dualgraph.ui.theme.ThemeHandler;
-import sk.dualnexon.dualgraph.lib.algorithm.MaxSpanningTreePrim;
 import sk.dualnexon.dualgraph.util.FileHandler;
 import sk.dualnexon.dualgraph.util.exception.NotValidFormatException;
 import sk.dualnexon.dualgraph.window.Window;
@@ -38,6 +39,7 @@ public class App extends Application {
 	
 	private static final String MSG_NO_WORKSPACE = "No workspace has been chosen";
 	private static final String DEFAULT_WORKSPACE_NAME = "Workspace";
+	private static final String PACKAGE_ALGORITHM = "sk.dualnexon.dualgraph.lib.algorithm";
 	
 	private static App instance;
 	
@@ -87,62 +89,23 @@ public class App extends Application {
     	
     	Menu menuAlgorithm = new Menu("Algorithm");
     	
-    	MenuItem menuAlgorithmBFS = new MenuItem("BFS");
-    	menuAlgorithmBFS.setOnAction(e -> {
-    		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
-    		if(currentWorkspace != null) {
-    			currentWorkspace.applyAlgorithm(new BFS(currentWorkspace.getGraph()));
-    		} else {
-    			showWarningAlert(MSG_NO_WORKSPACE);
-    		}
-    	});
-    	MenuItem menuAlgorithmDFS = new MenuItem("DFS");
-    	menuAlgorithmDFS.setOnAction(e -> {
-    		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
-    		if(currentWorkspace != null) {
-    			currentWorkspace.applyAlgorithm(new DFS(currentWorkspace.getGraph()));
-    		} else {
-    			showWarningAlert(MSG_NO_WORKSPACE);
-    		}
-    	});
-    	MenuItem menuAlgorithmBridgeDetection = new MenuItem("Bridge Detection");
-    	menuAlgorithmBridgeDetection.setOnAction(e -> {
-    		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
-    		if(currentWorkspace != null) {
-    			currentWorkspace.applyAlgorithm(new BridgeDetection(currentWorkspace.getGraph()));
-    		} else {
-    			showWarningAlert(MSG_NO_WORKSPACE);
-    		}
-    	});
-    	MenuItem menuAlgorithmCycleDetection = new MenuItem("Cycle Detection");
-    	menuAlgorithmCycleDetection.setOnAction(e -> {
-    		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
-    		if(currentWorkspace != null) {
-    			currentWorkspace.applyAlgorithm(new CycleDetection(currentWorkspace.getGraph()));
-    		} else {
-    			showWarningAlert(MSG_NO_WORKSPACE);
-    		}
-    	});
-    	MenuItem menuAlgorithmPrimMST = new MenuItem("Minimal Spanning Tree - Prim");
-    	menuAlgorithmPrimMST.setOnAction(e -> {
-    		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
-    		if(currentWorkspace != null) {
-    			currentWorkspace.applyAlgorithm(new MinSpanningTreePrim(currentWorkspace.getGraph()));
-    		} else {
-    			showWarningAlert(MSG_NO_WORKSPACE);
-    		}
-    	});
-    	MenuItem menuAlgorithmPrimMaxSpanningTree = new MenuItem("Maximal Spanning Tree - Prim");
-    	menuAlgorithmPrimMaxSpanningTree.setOnAction(e -> {
-    		Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
-    		if(currentWorkspace != null) {
-    			currentWorkspace.applyAlgorithm(new MaxSpanningTreePrim(currentWorkspace.getGraph()));
-    		} else {
-    			showWarningAlert(MSG_NO_WORKSPACE);
-    		}
-    	});
-    	
-    	menuAlgorithm.getItems().addAll(menuAlgorithmBFS, menuAlgorithmDFS, menuAlgorithmBridgeDetection, menuAlgorithmCycleDetection, menuAlgorithmPrimMST, menuAlgorithmPrimMaxSpanningTree);
+    	Set<Class<? extends Algorithm>> algorithmSet = findAllAlgorithms();
+    	for(Class<? extends Algorithm> algorithm : algorithmSet) {
+    		MenuItem menuItemAlgorithm = new MenuItem(algorithm.getSimpleName());
+    		menuItemAlgorithm.setOnAction(e-> {
+    			Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
+        		if(currentWorkspace != null) {
+        			try {
+        				Class<?> clazz = Class.forName(algorithm.getCanonicalName());
+        				Constructor<?> constructor = clazz.getConstructor(Graph.class);
+        				currentWorkspace.applyAlgorithm((Algorithm) constructor.newInstance(currentWorkspace.getGraph()));
+        			} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {}
+        		} else {
+        			showWarningAlert(MSG_NO_WORKSPACE);
+        		}
+    		});
+    		menuAlgorithm.getItems().add(menuItemAlgorithm);
+    	}
     	
     	Menu menuOptions = new Menu("Options");
     	
@@ -240,6 +203,11 @@ public class App extends Application {
     	for(Tab tab : tabPane.getTabs()) {
     		((Workspace) tab).removeNode(node);
     	}
+    }
+    
+    public Set<Class<? extends Algorithm>> findAllAlgorithms() {
+    	Reflections reflections = new Reflections(PACKAGE_ALGORITHM);
+    	return reflections.getSubTypesOf(Algorithm.class);
     }
 
     public static void main(String[] args) {
