@@ -35,6 +35,7 @@ public class Graph implements Updatable {
 		vertices.remove(vertex);
 		
 		for(int index = edges.size()-1; index >= 0; index--) {
+			if(edges.size() == 0) break;
 			Edge edge = edges.get(index);
 			if(edge.getFirstVertex().equals(vertex) || edge.getSecondVertex().equals(vertex)) {
 				edge.destroy();
