@@ -61,6 +61,7 @@ public class Workspace extends Tab implements Updatable {
 				double x = e.getX();
 				double y = e.getY();
 				graph.addVertex(new Vertex(graph, x + offsetX, y + offsetY));
+				if(App.get().getAutofillVerticesNames()) vertexNameConvention.reset();
 			}
 		});
 		

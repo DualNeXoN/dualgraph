@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -47,6 +48,8 @@ public class App extends Application {
 	private Window baseWindow;
 	private Scene scene;
 	private TabPane tabPane;
+	
+	private boolean autofillVerticesNames = false;
 	
     @Override
     public void start(Stage stage) {
@@ -153,7 +156,16 @@ public class App extends Application {
     			ThemeHandler.get().setActiveTheme(opt.get());
     		}
     	});
-    	menuOptions.getItems().addAll(menuThemes);
+    	CheckMenuItem menuAutofillVertices = new CheckMenuItem("Autofill vertex names");
+    	menuAutofillVertices.setOnAction(e -> {
+    		autofillVerticesNames = !autofillVerticesNames;
+    		if(autofillVerticesNames) {
+    			for(Tab tab : tabPane.getTabs()) {
+    				((Workspace) tab).getVertexNameConvention().reset();
+    			}
+    		}
+    	});
+    	menuOptions.getItems().addAll(menuThemes, menuAutofillVertices);
     	
     	Menu menuHelp = new Menu("Help");
     	
@@ -206,6 +218,10 @@ public class App extends Application {
     
     public TabPane getTabPane() {
 		return tabPane;
+	}
+    
+    public boolean getAutofillVerticesNames() {
+		return autofillVerticesNames;
 	}
     
     public void showWarningAlert(String titleMessage) {
