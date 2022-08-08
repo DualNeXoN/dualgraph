@@ -7,9 +7,11 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import sk.dualnexon.dualgraph.ui.Namespace;
+import sk.dualnexon.dualgraph.ui.editorbar.EditorBarAction;
 import sk.dualnexon.dualgraph.ui.theme.ColorUI;
 import sk.dualnexon.dualgraph.ui.theme.ThemeHandler;
 
@@ -120,6 +122,7 @@ public class Vertex extends BaseGraphNode {
 		
 		node.setOnContextMenuRequested((e) -> {
 			if(graph.isLocked()) return;
+			if(getWorkspace().getEditorBar().getCurrentAction().equals(EditorBarAction.CREATE_EDGE)) return;
 			contextMenu.show(node, e.getScreenX(), e.getScreenY());
 		});
 		
@@ -132,6 +135,7 @@ public class Vertex extends BaseGraphNode {
 		});
 		
 		node.setOnMouseDragged(e -> {
+			if(getWorkspace().getEditorBar().getCurrentAction().equals(EditorBarAction.CREATE_EDGE)) return;
 			if(e.isPrimaryButtonDown()) {
 				setPositionX(e.getX());
 				setPositionY(e.getY());
@@ -145,6 +149,23 @@ public class Vertex extends BaseGraphNode {
 		
 		node.setOnMouseExited((e) -> {
 			node.setCursor(Cursor.DEFAULT);
+		});
+		
+		node.setOnMouseClicked(e-> {
+			if(getWorkspace().getEditorBar().getCurrentAction().equals(EditorBarAction.DELETE)) {
+				if(e.getButton().equals(MouseButton.PRIMARY)) destroy();
+			} else if(getWorkspace().getEditorBar().getCurrentAction().equals(EditorBarAction.RENAME)) {
+				if(e.getButton().equals(MouseButton.PRIMARY)) namespace.requestToChangeValue();
+			} else if(getWorkspace().getEditorBar().getCurrentAction().equals(EditorBarAction.CREATE_EDGE)) {
+				if(e.getButton().equals(MouseButton.PRIMARY)) {
+					graph.setStartingVertex(this);
+				} else if(e.getButton().equals(MouseButton.SECONDARY)) {
+					graph.setEndingVertex(this);
+					if(graph.getStartingVertex() != null && graph.getEndingVertex() != null && !graph.getStartingVertex().equals(graph.getEndingVertex())) {
+						graph.addEdge(new Edge(graph, graph.getStartingVertex(), graph.getEndingVertex()));
+					}
+				}
+			}
 		});
 		
 	}

@@ -13,6 +13,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import sk.dualnexon.dualgraph.ui.Namespace;
 import sk.dualnexon.dualgraph.ui.Updatable;
+import sk.dualnexon.dualgraph.ui.editorbar.EditorBarAction;
 import sk.dualnexon.dualgraph.ui.theme.ColorUI;
 import sk.dualnexon.dualgraph.ui.theme.ThemeHandler;
 
@@ -142,6 +143,14 @@ public class Edge extends BaseGraphNode {
 		
 		node.setOnMouseExited(e -> {
 			node.setCursor(Cursor.DEFAULT);
+		});
+		
+		node.setOnMouseClicked(e-> {
+			if(getWorkspace().getEditorBar().getCurrentAction().equals(EditorBarAction.DELETE)) {
+				destroy();
+			} else if(getWorkspace().getEditorBar().getCurrentAction().equals(EditorBarAction.RENAME)) {
+				namespace.requestToChangeValue();
+			}
 		});
 	}
 	

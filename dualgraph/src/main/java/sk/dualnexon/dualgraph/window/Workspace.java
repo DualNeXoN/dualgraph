@@ -15,6 +15,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.MouseButton;
 import javafx.util.Duration;
 import sk.dualnexon.dualgraph.App;
 import sk.dualnexon.dualgraph.lib.Graph;
@@ -23,6 +24,8 @@ import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmInterruptedException;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
 import sk.dualnexon.dualgraph.ui.Updatable;
+import sk.dualnexon.dualgraph.ui.editorbar.EditorBar;
+import sk.dualnexon.dualgraph.ui.editorbar.EditorBarAction;
 import sk.dualnexon.dualgraph.util.FileHandler;
 import sk.dualnexon.dualgraph.util.VertexNameConvention;
 
@@ -36,17 +39,21 @@ public class Workspace extends Tab implements Updatable {
 	private Grid grid;
 	private VertexNameConvention vertexNameConvention;
 	private DebugMonitor debugMonitor;
+	private Group group;
 	
 	private Algorithm algorithm = null;
 	
 	private SelectionRectangle selectionRectangle;
+	
+	private EditorBar editorBar;
 	
 	private double offsetX = 0, initialDragX = 0, lastOffsetX = offsetX;
 	private double offsetY = 0, initialDragY = 0, lastOffsetY = offsetY;
 	private boolean stageMove = false;
 
 	public Workspace(String name) {
-		super(name, new Group());
+		super(name);
+		setContent(group = new Group());
 		
 		setName(name);
 		
@@ -54,9 +61,10 @@ public class Workspace extends Tab implements Updatable {
 		grid = new Grid(this);
 		vertexNameConvention = new VertexNameConvention();
 		debugMonitor = new DebugMonitor(this);
+		addNode(editorBar = new EditorBar(this));
 		
 		getContent().setOnMouseClicked(e -> {
-			if(e.isControlDown()) {
+			if((e.isControlDown() || editorBar.getCurrentAction().equals(EditorBarAction.CREATE_VERTEX)) && e.getButton().equals(MouseButton.PRIMARY)) {
 				if(graph.isLocked()) return;
 				double x = e.getX();
 				double y = e.getY();
@@ -152,11 +160,11 @@ public class Workspace extends Tab implements Updatable {
 	}
 	
 	public void addNode(Node node) {
-		((Group) getContent()).getChildren().add(node);
+		group.getChildren().add(node);
 	}
 	
 	public void removeNode(Node node) {
-		((Group) getContent()).getChildren().remove(node);
+		group.getChildren().remove(node);
 	}
 	
 	public void applyAlgorithm(Algorithm algorithm) {
@@ -165,6 +173,8 @@ public class Workspace extends Tab implements Updatable {
 			algorithm.calculate();
 			this.algorithm = algorithm;
 			graph.setLocked(true);
+			editorBar.setVisible(false);
+			editorBar.setAction(EditorBarAction.NONE);
 		} catch (AlgorithmException ex) {
 			algorithm.destroy();
 			if(!(ex instanceof AlgorithmInterruptedException)) App.get().showWarningAlert(ex.getMessage());
@@ -176,6 +186,7 @@ public class Workspace extends Tab implements Updatable {
 		algorithm.destroy();
 		algorithm = null;
 		graph.setLocked(false);
+		editorBar.setVisible(true);
 	}
 	
 	public Graph getGraph() {
@@ -254,6 +265,10 @@ public class Workspace extends Tab implements Updatable {
 		return vertexNameConvention;
 	}
 	
+	public EditorBar getEditorBar() {
+		return editorBar;
+	}
+	
 	public void toggleDebugMonitor() {
 		debugMonitor.toggleVisibility();
 	}
@@ -263,6 +278,7 @@ public class Workspace extends Tab implements Updatable {
 		grid.destroy();
 		graph.destroy();
 		debugMonitor.destroy();
+		editorBar.destroy();
 	}
 
 	@Override
@@ -270,6 +286,8 @@ public class Workspace extends Tab implements Updatable {
 		grid.update();
 		graph.update();
 		if(algorithm != null) algorithm.getControls().update();
+		editorBar.update();
+		
 	}
 	
 }
