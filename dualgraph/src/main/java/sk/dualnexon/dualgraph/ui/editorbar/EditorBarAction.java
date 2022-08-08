@@ -1,8 +1,7 @@
 package sk.dualnexon.dualgraph.ui.editorbar;
 
-import java.io.File;
-
 import javafx.scene.image.Image;
+import sk.dualnexon.dualgraph.ResourceHandler;
 
 public enum EditorBarAction {
 	
@@ -16,7 +15,7 @@ public enum EditorBarAction {
 	private String description;
 	
 	EditorBarAction(String icon, String description) {
-		this.icon = new Image("icons" + File.separator + icon);
+		this.icon = new Image(ResourceHandler.getResourceInputStream("icons/" + icon));
 		this.description = description;
 	}
 	

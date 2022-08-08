@@ -74,6 +74,7 @@ public class EditorBar extends HBox implements Updatable {
 	}
 	
 	private void correctPosition() {
+		if(getScene() == null) return;
 		if(getLayoutX() + getLayoutBounds().getWidth() > getScene().getWidth() - 5) setLayoutX(getScene().getWidth() - getLayoutBounds().getWidth() - 5);
 		if(getLayoutX() < 5) setLayoutX(5);
 		if(getLayoutY() + getLayoutBounds().getHeight() > getScene().getHeight() - getLayoutBounds().getHeight() - 35) setLayoutY(getScene().getHeight() - getLayoutBounds().getHeight() - 60);

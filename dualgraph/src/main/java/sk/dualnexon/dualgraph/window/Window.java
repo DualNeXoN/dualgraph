@@ -2,6 +2,7 @@ package sk.dualnexon.dualgraph.window;
 
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import sk.dualnexon.dualgraph.GlobalSettings;
 
 public class Window extends Stage {
 	
@@ -18,6 +19,8 @@ public class Window extends Stage {
 		setWidth(width);
 		setHeight(height);
 		setTitle(DEFAULT_WINDOW_TITLE);
+		
+		getIcons().add(GlobalSettings.getApplicationIcon());
 		
 		show();
 		

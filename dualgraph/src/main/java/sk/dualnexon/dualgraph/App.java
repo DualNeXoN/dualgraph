@@ -1,11 +1,21 @@
 package sk.dualnexon.dualgraph;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-
-import org.reflections.Reflections;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -27,6 +37,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import sk.dualnexon.dualgraph.lib.Graph;
+import sk.dualnexon.dualgraph.lib.algorithm.BFS;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
 import sk.dualnexon.dualgraph.ui.theme.Theme;
 import sk.dualnexon.dualgraph.ui.theme.ThemeHandler;
@@ -39,7 +50,6 @@ public class App extends Application {
 	
 	private static final String MSG_NO_WORKSPACE = "No workspace has been chosen";
 	private static final String DEFAULT_WORKSPACE_NAME = "Workspace";
-	private static final String PACKAGE_ALGORITHM = "sk.dualnexon.dualgraph.lib.algorithm";
 	
 	private static App instance;
 	
@@ -89,8 +99,8 @@ public class App extends Application {
     	
     	Menu menuAlgorithm = new Menu("Algorithm");
     	
-    	Set<Class<? extends Algorithm>> algorithmSet = findAllAlgorithms();
-    	for(Class<? extends Algorithm> algorithm : algorithmSet) {
+    	Set<Class<?>> algorithmSet = loadAlgorithms();
+    	for(Class<?> algorithm : algorithmSet) {
     		MenuItem menuItemAlgorithm = new MenuItem(algorithm.getSimpleName());
     		menuItemAlgorithm.setOnAction(e-> {
     			Workspace currentWorkspace = (Workspace) tabPane.getSelectionModel().getSelectedItem();
@@ -99,7 +109,7 @@ public class App extends Application {
         				Class<?> clazz = Class.forName(algorithm.getCanonicalName());
         				Constructor<?> constructor = clazz.getConstructor(Graph.class);
         				currentWorkspace.applyAlgorithm((Algorithm) constructor.newInstance(currentWorkspace.getGraph()));
-        			} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {}
+        			} catch(Exception ex) {}
         		} else {
         			showWarningAlert(MSG_NO_WORKSPACE);
         		}
@@ -205,10 +215,66 @@ public class App extends Application {
     	}
     }
     
-    public Set<Class<? extends Algorithm>> findAllAlgorithms() {
-    	Reflections reflections = new Reflections(PACKAGE_ALGORITHM);
-    	return reflections.getSubTypesOf(Algorithm.class);
+    private Set<Class<?>> loadAlgorithms() {
+    	if(GlobalSettings.isJar()) {
+			return ReflectionScanner.getClassesFromJar(new File(System.getProperty("user.dir") + File.separator + System.getProperty("java.class.path")));
+    	} else {
+    		return ReflectionScanner.getClassesFromIDE(BFS.class.getPackageName());
+    	}
     }
+    
+	private static class ReflectionScanner {
+		
+		public static Set<String> getClassNamesFromJar(File file) throws IOException {
+		    Set<String> classNames = new HashSet<>();
+		    try(JarFile jarFile = new JarFile(file)) {
+		        Enumeration<JarEntry> enumerator = jarFile.entries();
+		        while(enumerator.hasMoreElements()) {
+		            JarEntry jarEntry = enumerator.nextElement();
+		            if(jarEntry.getName().endsWith(".class")) {
+		                String className = jarEntry.getName().replace("/", ".").replace(".class", "");
+		                classNames.add(className);
+		            }
+		        }
+		        return classNames;
+		    }
+		}
+		
+		public static Set<Class<?>> getClassesFromJar(File jarFile) {
+			try {
+				Set<String> classNames = getClassNamesFromJar(jarFile);
+			    Set<Class<?>> classes = new HashSet<>(classNames.size());
+			    try {
+			    	URLClassLoader cl = URLClassLoader.newInstance(new URL[] { new URL("jar:file:" + jarFile + "!/") });
+			    	for(String name : classNames) {
+			        	if(name.startsWith(BFS.class.getPackageName()) && name.split(Pattern.quote(".")).length == 6) {
+			        		Class<?> clazz = cl.loadClass(name);
+			        		classes.add(clazz);
+			        	}
+			        }
+			    } catch(Exception ex) {}
+			    return classes;
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			return null;
+		}
+
+		public static Set<Class<?>> getClassesFromIDE(String packageName) {
+			InputStream stream = ResourceHandler.getSourceInputStream(packageName.replaceAll("[.]", "/"));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+			return reader.lines().filter(line -> line.endsWith(".class")).map(line -> getClass(line, packageName)).collect(Collectors.toSet());
+		}
+
+		private static Class<?> getClass(String className, String packageName) {
+			try {
+				return (Class<?>) Class.forName(packageName + "." + className.substring(0, className.lastIndexOf('.')));
+			} catch (ClassNotFoundException ex) {
+				ex.printStackTrace();
+			}
+			return null;
+		}
+	}
 
     public static void main(String[] args) {
     	launch(args);

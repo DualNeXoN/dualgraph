@@ -18,7 +18,7 @@ import org.json.JSONTokener;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import sk.dualnexon.dualgraph.App;
-import sk.dualnexon.dualgraph.GlobalSettings;
+import sk.dualnexon.dualgraph.ResourceHandler;
 import sk.dualnexon.dualgraph.lib.Edge;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.util.exception.NotValidFormatException;
@@ -159,7 +159,7 @@ public class FileHandler {
 		String output = "";
 		
 		try {
-			InputStream in = ClassLoader.getSystemResourceAsStream((GlobalSettings.IS_JAR ? "resources/" : "") + path);
+			InputStream in = ResourceHandler.getResourceInputStream(path);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 			String read = null;
 			while((read = reader.readLine()) != null) {
@@ -180,7 +180,7 @@ public class FileHandler {
 	}
 	
 	public JSONObject loadThemes() {
-		InputStream in = ClassLoader.getSystemResourceAsStream((GlobalSettings.IS_JAR ? "resources/" : "") + "themes.json");
+		InputStream in = ResourceHandler.getResourceInputStream("themes.json");
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		JSONTokener tokener = new JSONTokener(br);
 		
