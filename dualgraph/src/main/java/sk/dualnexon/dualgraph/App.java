@@ -25,9 +25,9 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -124,9 +124,10 @@ public class App extends Application {
     		ChoiceDialog<Theme> choiceDialog = new ChoiceDialog<Theme>(ThemeHandler.get().getActiveTheme(), ThemeHandler.get().getThemes());
     		choiceDialog.setHeaderText(null);
     		choiceDialog.setContentText("Select theme:");
-    		Optional<Theme> opt = choiceDialog.showAndWait();
+    		((Stage) choiceDialog.getDialogPane().getScene().getWindow()).getIcons().add(GlobalSettings.getApplicationIcon());
+    		Optional<?> opt = choiceDialog.showAndWait();
     		if(opt.isPresent()) {
-    			ThemeHandler.get().setActiveTheme(opt.get());
+    			ThemeHandler.get().setActiveTheme((Theme) opt.get());
     		}
     	});
     	CheckMenuItem menuAutofillVertices = new CheckMenuItem("Autofill vertex names");
@@ -200,12 +201,14 @@ public class App extends Application {
     public void showWarningAlert(String titleMessage) {
     	Alert alert = new Alert(AlertType.WARNING);
     	alert.setHeaderText(titleMessage);
+    	((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(GlobalSettings.getApplicationIcon());
     	alert.show();
     }
     
     public void showInfoAlert(String contentText) {
     	Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setHeaderText(contentText);
+    	((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(GlobalSettings.getApplicationIcon());
     	alert.show();
     }
     

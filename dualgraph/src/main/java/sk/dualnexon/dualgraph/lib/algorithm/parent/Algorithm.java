@@ -3,6 +3,8 @@ package sk.dualnexon.dualgraph.lib.algorithm.parent;
 import java.util.Optional;
 
 import javafx.scene.control.ChoiceDialog;
+import javafx.stage.Stage;
+import sk.dualnexon.dualgraph.GlobalSettings;
 import sk.dualnexon.dualgraph.lib.Graph;
 import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
@@ -53,6 +55,7 @@ public abstract class Algorithm implements Destroyable {
 		ChoiceDialog<Vertex> choiceDialog = new ChoiceDialog<Vertex>(graph.getVertices().getFirst(), graph.getVertices());
 		choiceDialog.setHeaderText(null);
 		choiceDialog.setContentText("Select starting vertex:");
+		((Stage) choiceDialog.getDialogPane().getScene().getWindow()).getIcons().add(GlobalSettings.getApplicationIcon());
 		Optional<Vertex> opt = choiceDialog.showAndWait();
 		if(opt.isPresent()) {
 			return opt.get();
