@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import sk.dualnexon.dualgraph.App;
@@ -147,7 +148,7 @@ public class FileHandler {
 			App.get().getTabPane().getTabs().add(w);
 		} catch (FileNotFoundException ex) {
 			ex.printStackTrace();
-			App.get().showWarningAlert("File not found");
+			App.get().showAlert(AlertType.WARNING, "File not found");
 		} catch(JSONException ex) {
 			ex.printStackTrace();
 			throw new NotValidFormatException();

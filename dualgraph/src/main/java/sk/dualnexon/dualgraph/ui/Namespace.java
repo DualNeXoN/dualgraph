@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javafx.scene.Cursor;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import sk.dualnexon.dualgraph.App;
@@ -101,7 +102,7 @@ public class Namespace implements Updatable {
 			String newName = result.get();
 			for(Vertex vertex : graphNode.getGraph().getVertices()) {
 				if(vertex.getNamespace().getText().equals(newName)) {
-					App.get().showWarningAlert("Vertex with name " + newName + " already exists!");
+					App.get().showAlert(AlertType.WARNING, "Vertex with name " + newName + " already exists!");
 					return;
 				}
 			}

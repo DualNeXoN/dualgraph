@@ -82,7 +82,7 @@ public class App extends Application {
     		try {
     			FileHandler.get().loadWorkspace();
     		} catch(NotValidFormatException ex) {
-    			showWarningAlert(ex.toString());
+    			showAlert(AlertType.WARNING, ex.toString());
     		}
     	});
     	MenuItem menuItemSave = new MenuItem("Save...");
@@ -91,7 +91,7 @@ public class App extends Application {
     		if(currentWorkspace != null) {
     			FileHandler.get().saveWorkspace(currentWorkspace);
     		} else {
-    			showWarningAlert(MSG_NO_WORKSPACE);
+    			showAlert(AlertType.WARNING, MSG_NO_WORKSPACE);
     		}
     	});
     	
@@ -111,7 +111,7 @@ public class App extends Application {
         				currentWorkspace.applyAlgorithm((Algorithm) constructor.newInstance(currentWorkspace.getGraph()));
         			} catch(Exception ex) {}
         		} else {
-        			showWarningAlert(MSG_NO_WORKSPACE);
+        			showAlert(AlertType.WARNING, MSG_NO_WORKSPACE);
         		}
     		});
     		menuAlgorithm.getItems().add(menuItemAlgorithm);
@@ -125,9 +125,9 @@ public class App extends Application {
     		choiceDialog.setHeaderText(null);
     		choiceDialog.setContentText("Select theme:");
     		((Stage) choiceDialog.getDialogPane().getScene().getWindow()).getIcons().add(GlobalSettings.getApplicationIcon());
-    		Optional<?> opt = choiceDialog.showAndWait();
+    		Optional<Theme> opt = choiceDialog.showAndWait();
     		if(opt.isPresent()) {
-    			ThemeHandler.get().setActiveTheme((Theme) opt.get());
+    			ThemeHandler.get().setActiveTheme(opt.get());
     		}
     	});
     	CheckMenuItem menuAutofillVertices = new CheckMenuItem("Autofill vertex names");
@@ -145,7 +145,7 @@ public class App extends Application {
     	
     	MenuItem menuUse = new MenuItem("How to use");
     	menuUse.setOnAction(e-> {
-    		showInfoAlert(FileHandler.get().loadTextFileFromRes("use.txt"));
+    		showAlert(AlertType.INFORMATION, FileHandler.get().loadTextFileFromRes("use.txt"));
     	});
     	menuHelp.getItems().addAll(menuUse);
     	
@@ -198,16 +198,9 @@ public class App extends Application {
 		return autofillVerticesNames;
 	}
     
-    public void showWarningAlert(String titleMessage) {
-    	Alert alert = new Alert(AlertType.WARNING);
-    	alert.setHeaderText(titleMessage);
-    	((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(GlobalSettings.getApplicationIcon());
-    	alert.show();
-    }
-    
-    public void showInfoAlert(String contentText) {
-    	Alert alert = new Alert(AlertType.INFORMATION);
-    	alert.setHeaderText(contentText);
+    public void showAlert(AlertType type, String text) {
+    	Alert alert = new Alert(type);
+    	alert.setHeaderText(text);
     	((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().add(GlobalSettings.getApplicationIcon());
     	alert.show();
     }
