@@ -12,12 +12,13 @@ import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmInterruptedExcept
 import sk.dualnexon.dualgraph.lib.algorithm.exception.NoVerticesException;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
 import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
+import sk.dualnexon.dualgraph.util.Logger;
 
 public class BFS extends Algorithm {
 	
 	private static final String ALGORITHM_NAME = "Breadth-first Search";
-	private static final String MASK_MESSAGE_START = "Starting in vertex %s";
-	private static final String MASK_MESSAGE_DISCOVER = "Vertex %s discovered from vertex %s";
+	private static final String MASK_MESSAGE_START = "Starting in %s";
+	private static final String MASK_MESSAGE_DISCOVER = "%s discovered from %s";
 	
 	private AdjacencyList adjMask;
 	private boolean firstWasDiscovered;
@@ -58,9 +59,9 @@ public class BFS extends Algorithm {
             map = queue.poll();
             Vertex r = map[0];
             s = map[1];
-            String outputMessage = String.format((firstWasDiscovered ? MASK_MESSAGE_DISCOVER : MASK_MESSAGE_START), s.getNamespace().getText(), r.getNamespace().getText());
+            String outputMessage = String.format((firstWasDiscovered ? MASK_MESSAGE_DISCOVER : MASK_MESSAGE_START), s.toString(), r.toString());
             firstWasDiscovered = true;
-            System.out.println(outputMessage);
+            Logger.log(String.format("[%s] %s", toString(), outputMessage));
             GraphMask mask = new GraphMask(graph, outputMessage);
 			visualizer.addMask(mask);
 			adjMask.addVertex(s);
@@ -77,8 +78,6 @@ public class BFS extends Algorithm {
                 }
             }
         }
-        
-        System.out.println();
 		
         finished();
 	}

@@ -26,4 +26,8 @@ public class GlobalSettings {
 		return applicationIcon;
 	}
 	
+	public static boolean logConsole() {
+		return true;
+	}
+	
 }

@@ -28,6 +28,7 @@ import sk.dualnexon.dualgraph.ui.Updatable;
 import sk.dualnexon.dualgraph.ui.editorbar.EditorBar;
 import sk.dualnexon.dualgraph.ui.editorbar.EditorBarAction;
 import sk.dualnexon.dualgraph.util.FileHandler;
+import sk.dualnexon.dualgraph.util.Logger;
 import sk.dualnexon.dualgraph.util.VertexNameConvention;
 
 public class Workspace extends Tab implements Updatable {
@@ -157,7 +158,12 @@ public class Workspace extends Tab implements Updatable {
 	        	delayer.play();
 	        }
 	    });
+	    
+	    setOnClosed(e-> {
+	    	destroy();
+	    });
 		
+	    Logger.log("Created " + getClass().getSimpleName() + " with name \"" + name + "\" (" + hashCode() + ")");
 	}
 	
 	public void addNode(Node node) {
@@ -256,6 +262,7 @@ public class Workspace extends Tab implements Updatable {
 	public void setName(String name) {
 		this.name = name;
 		setText(name);
+		Logger.log("Named " + getClass().getSimpleName() + " (" + hashCode() + ") with name \"" + name + "\"");
 	}
 	
 	public String getName() {
@@ -280,6 +287,7 @@ public class Workspace extends Tab implements Updatable {
 		graph.destroy();
 		debugMonitor.destroy();
 		editorBar.destroy();
+		Logger.log("Destroyed " + getClass().getSimpleName() + " with name \"" + name + "\" (" + hashCode() + ")");
 	}
 
 	@Override

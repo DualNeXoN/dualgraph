@@ -11,6 +11,7 @@ import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
 import sk.dualnexon.dualgraph.lib.visualization.GraphVisualizer;
 import sk.dualnexon.dualgraph.ui.Destroyable;
 import sk.dualnexon.dualgraph.ui.VisualControl;
+import sk.dualnexon.dualgraph.util.Logger;
 
 public abstract class Algorithm implements Destroyable {
 	
@@ -26,6 +27,7 @@ public abstract class Algorithm implements Destroyable {
 		graph.unselectAll();
 		visualizer = new GraphVisualizer();
 		controls = new VisualControl(this);
+		Logger.log("Created " + getClass().getSimpleName() + " (" + hashCode() + ") for " + graph.getClass().getSimpleName() + " (" + graph.hashCode() + ")");
 	}
 	
 	public Graph getGraph() {
@@ -49,6 +51,7 @@ public abstract class Algorithm implements Destroyable {
 	protected void finished() {
 		controls.setVisible(true);
 		controls.update();
+		Logger.log(toString() + " finished");
 	}
 	
 	protected Vertex getStartingVertex() {
@@ -68,6 +71,12 @@ public abstract class Algorithm implements Destroyable {
 	public void destroy() {
 		visualizer.clearMasks();
 		controls.destroy();
+		Logger.log("Destroyed " + this.getClass().getSimpleName() + " (" + hashCode() + ")");
+	}
+	
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " (" + hashCode() + ")";
 	}
 	
 }

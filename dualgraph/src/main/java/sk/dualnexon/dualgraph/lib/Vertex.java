@@ -21,8 +21,6 @@ public class Vertex extends BaseGraphNode {
 	private static final double MIN_SIZE = 10;
 	public static Color defaultColor = ThemeHandler.get().getActiveTheme().getColor(ColorUI.VERTEX_OUTLINE);
 	
-	private String uuid;
-	
 	private double positionX, positionY;
 	private double size;
 	private Circle node;
@@ -222,19 +220,12 @@ public class Vertex extends BaseGraphNode {
 		return namespace;
 	}
 	
-	public String getUUID() {
-		return uuid;
-	}
-	
-	public void setUUID(String uuid) {
-		this.uuid = uuid;
-	}
-	
 	@Override
 	public void destroy() {
 		graph.getWorkspace().removeNode(node);
 		graph.removeVertex(this);
 		namespace.destroy();
+		super.destroy();
 	}
 
 	@Override

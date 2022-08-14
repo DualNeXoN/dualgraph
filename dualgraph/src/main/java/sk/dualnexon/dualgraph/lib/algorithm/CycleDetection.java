@@ -7,6 +7,7 @@ import sk.dualnexon.dualgraph.lib.Vertex;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.AlgorithmException;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.NoVerticesException;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
+import sk.dualnexon.dualgraph.util.Logger;
 
 public class CycleDetection extends Algorithm {
 	
@@ -34,7 +35,7 @@ public class CycleDetection extends Algorithm {
 		}
 
 		for(Vertex v : graph.getVertices()) {
-			System.out.println("Z vrcholu " + v.getNamespace().getText() + " je cyklický? " + recursive(v, visited, recStack)); //TODO neskor bude doplnena konzola do appky
+			Logger.log("Z vrcholu " + v.getNamespace().getText() + " je cyklický? " + recursive(v, visited, recStack));
 		}
 		
 		finished();

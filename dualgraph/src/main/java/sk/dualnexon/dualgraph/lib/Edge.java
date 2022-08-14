@@ -94,21 +94,7 @@ public class Edge extends BaseGraphNode {
 		valueItem.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				TextInputDialog dialog = new TextInputDialog(namespace.getText());
-				dialog.setHeaderText(null);
-				dialog.setGraphic(null);
-				dialog.setTitle("DualGraph action");
-				dialog.setContentText("Enter new value:");
-
-				Optional<String> result = dialog.showAndWait();
-				if(result.isPresent()) {
-					String resultString = result.get();
-					try {
-						setValue(Integer.parseInt(resultString));
-					} catch(NumberFormatException ex) {
-						
-					}
-				}
+				requestToChangeValue();
 			}
 		});
 		MenuItem directionItem = new MenuItem("Directed/Undirected");
@@ -149,7 +135,7 @@ public class Edge extends BaseGraphNode {
 			if(getWorkspace().getEditorBar().getCurrentAction().equals(EditorBarAction.DELETE)) {
 				destroy();
 			} else if(getWorkspace().getEditorBar().getCurrentAction().equals(EditorBarAction.RENAME)) {
-				namespace.requestToChangeValue();
+				requestToChangeValue();
 			}
 		});
 	}
@@ -263,6 +249,22 @@ public class Edge extends BaseGraphNode {
 		return namespace;
 	}
 	
+	private void requestToChangeValue() {
+		TextInputDialog dialog = new TextInputDialog(namespace.getText());
+		dialog.setHeaderText(null);
+		dialog.setGraphic(null);
+		dialog.setTitle("DualGraph action");
+		dialog.setContentText("Enter new value:");
+
+		Optional<String> result = dialog.showAndWait();
+		if(result.isPresent()) {
+			String resultString = result.get();
+			try {
+				setValue(Integer.parseInt(resultString));
+			} catch(NumberFormatException ex) {}
+		}
+	}
+	
 	@Override
 	public void destroy() {
 		graph.getWorkspace().removeNode(node);
@@ -272,6 +274,7 @@ public class Edge extends BaseGraphNode {
 			arrow.destroy();
 		}
 		namespace.destroy();
+		super.destroy();
 	}
 
 	@Override

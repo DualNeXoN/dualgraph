@@ -1,15 +1,20 @@
 package sk.dualnexon.dualgraph.lib;
 
+import java.util.UUID;
+
 import sk.dualnexon.dualgraph.ui.Updatable;
+import sk.dualnexon.dualgraph.util.Logger;
 import sk.dualnexon.dualgraph.window.Workspace;
 
 public abstract class BaseGraphNode implements Updatable {
 	
 	protected boolean selected = false;
 	protected Graph graph;
+	protected String uuid;
 	
 	public BaseGraphNode(Graph graph) {
 		this.graph = graph;
+		uuid = UUID.randomUUID().toString();
 	}
 	
 	public Graph getGraph() {
@@ -36,7 +41,20 @@ public abstract class BaseGraphNode implements Updatable {
 		graph.update();
 	}
 	
+	public String getUUID() {
+		return uuid;
+	}
+	
+	public void setUUID(String uuid) {
+		this.uuid = uuid;
+	}
+	
 	public abstract double getRealPositionX();
 	public abstract double getRealPositionY();
+	
+	@Override
+	public void destroy() {
+		Logger.log("Destroyed " + toString() + " (" + uuid + ") from " + graph.getClass().getSimpleName() + " (" + graph.hashCode() + ")");
+	}
 	
 }

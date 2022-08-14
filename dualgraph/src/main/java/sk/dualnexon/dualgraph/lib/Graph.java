@@ -3,6 +3,7 @@ package sk.dualnexon.dualgraph.lib;
 import java.util.LinkedList;
 
 import sk.dualnexon.dualgraph.ui.Updatable;
+import sk.dualnexon.dualgraph.util.Logger;
 import sk.dualnexon.dualgraph.window.Workspace;
 
 public class Graph implements Updatable {
@@ -21,11 +22,13 @@ public class Graph implements Updatable {
 		this.workspace = workspace;
 		vertices = new LinkedList<>();
 		edges = new LinkedList<>();
+		Logger.log("Created " + getClass().getSimpleName() + " (" + hashCode() + ") in " + workspace.getClass().getSimpleName() + " \"" + workspace.getName() + "\" (" + workspace.hashCode() + ")");
 	}
 	
 	public void addVertex(Vertex vertex) {
 		vertices.add(vertex);
 		workspace.addNode(vertex.getNode());
+		Logger.log("Added " + vertex.toString() + " (" + vertex.getUUID() + ") to " + getClass().getSimpleName() + " (" + hashCode() + ") in " + workspace.getClass().getSimpleName() + " \"" + workspace.getName() + "\" (" + workspace.hashCode() + ")");
 		update();
 	}
 	
@@ -57,6 +60,7 @@ public class Graph implements Updatable {
 			}
 		}
 		edges.add(edge);
+		Logger.log("Added " + edge.getClass().getSimpleName() + " " + edge.toString() + " (" + edge.getUUID() + ") to " + getClass().getSimpleName() + " (" + hashCode() + ") in " + workspace.getClass().getSimpleName() + " \"" + workspace.getName() + "\" (" + workspace.hashCode() + ")");
 		update();
 	}
 	

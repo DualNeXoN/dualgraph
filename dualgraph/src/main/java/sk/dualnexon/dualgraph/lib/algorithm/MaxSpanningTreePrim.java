@@ -13,6 +13,7 @@ import sk.dualnexon.dualgraph.lib.algorithm.exception.NoVerticesException;
 import sk.dualnexon.dualgraph.lib.algorithm.exception.UnsupportedGraphException;
 import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
 import sk.dualnexon.dualgraph.lib.visualization.GraphMask;
+import sk.dualnexon.dualgraph.util.Logger;
 
 public class MaxSpanningTreePrim extends Algorithm {
 	
@@ -102,14 +103,11 @@ public class MaxSpanningTreePrim extends Algorithm {
 		
 		int sum = 0;
 		for(Edge edge : outputListEdges) {
-			System.out.println(edge.getFirstVertex().getNamespace().getText() + "-" + edge.getSecondVertex().getNamespace().getText());
 			sum += edge.getValue();
 		}
-		System.out.println(sum);
+		Logger.log(toString() + " Tree weight: " + sum);
 		
-		System.out.println();
 		finished();
-		
 	}
 	
 	private boolean usedAll(HashMap<Vertex, Boolean> used) {

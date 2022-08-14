@@ -42,6 +42,7 @@ import sk.dualnexon.dualgraph.lib.algorithm.parent.Algorithm;
 import sk.dualnexon.dualgraph.ui.theme.Theme;
 import sk.dualnexon.dualgraph.ui.theme.ThemeHandler;
 import sk.dualnexon.dualgraph.util.FileHandler;
+import sk.dualnexon.dualgraph.util.Logger;
 import sk.dualnexon.dualgraph.util.exception.NotValidFormatException;
 import sk.dualnexon.dualgraph.window.Window;
 import sk.dualnexon.dualgraph.window.Workspace;
@@ -139,7 +140,11 @@ public class App extends Application {
     			}
     		}
     	});
-    	menuOptions.getItems().addAll(menuThemes, menuAutofillVertices);
+    	MenuItem menuSaveLogs = new MenuItem("Save Logs");
+    	menuSaveLogs.setOnAction(e -> {
+    		Logger.saveLogs();
+    	});
+    	menuOptions.getItems().addAll(menuThemes, menuAutofillVertices, menuSaveLogs);
     	
     	Menu menuHelp = new Menu("Help");
     	
